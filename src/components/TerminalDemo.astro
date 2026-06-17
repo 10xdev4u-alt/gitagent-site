@@ -1,27 +1,7 @@
 ---
-// TerminalDemo — lines are always visible. A blinking "current" caret
-// travels down the log to show progress. This is robust to JS timing
-// and never leaves the user with a blank terminal.
-const lines = [
-  { t: 'cmd',  html: '<span class="prompt">$</span> <span class="cmd">npx</span> <span class="arg">gitagent</span> <span class="arg">run</span> <span class="arg">triage</span> <span class="arg">--issue=42</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:01]</span> <span class="ok">●</span> loaded manifest <span class="cyan">triage.md</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:01]</span> <span class="ok">●</span> model <span class="cyan">claude-sonnet-4-5</span> · temperature <span class="cyan">0.1</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:02]</span> <span class="ok">●</span> context built: 1,247 tokens <span class="dim">(system + memory + event)</span>' },
-  { t: 'call', html: '<span class="dim">[14:23:02]</span> <span class="amber">→</span> <span class="arg">llm.call</span> <span class="dim">(step 1 of 5)</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:03]</span> <span class="ok">●</span> tool call: <span class="arg">github.add_labels</span> input=<span class="cyan">{issue_number:42, labels:[bug]}</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:04]</span> <span class="ok">✓</span> labels added: <span class="ok">bug</span>' },
-  { t: 'call', html: '<span class="dim">[14:23:04]</span> <span class="amber">→</span> <span class="arg">llm.call</span> <span class="dim">(step 2 of 5)</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:05]</span> <span class="ok">●</span> tool call: <span class="arg">github.post_comment</span>' },
-  { t: 'out',  html: '        body=<span class="cyan">"Thanks for the report — looking into this. cc @maintainer"</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:05]</span> <span class="ok">✓</span> comment posted <span class="dim">(id=</span><span class="cyan">291487</span><span class="dim">)</span>' },
-  { t: 'call', html: '<span class="dim">[14:23:06]</span> <span class="amber">→</span> <span class="arg">llm.call</span> <span class="dim">(step 3 of 5)</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:06]</span> <span class="ok">●</span> tool call: <span class="arg">memory.write</span>' },
-  { t: 'out',  html: '        key=<span class="cyan">"triage:42:labels"</span> value=<span class="cyan">[bug]</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:07]</span> <span class="ok">✓</span> memory persisted' },
-  { t: 'out',  html: '<span class="dim">[14:23:08]</span> <span class="ok">●</span> run complete · <span class="ok">3 tools · 4.2s · 847 tokens</span>' },
-  { t: 'ok',   html: '<span class="ok">✓</span> <span class="ok">agent "triage" completed successfully</span>' },
-  { t: 'dim',  html: '<span class="dim">run_id: r-9b2c1d4e · cost: $0.024 · saved to: .gitagent/runs/2026-06-17/</span>' },
-];
+// TerminalDemo — all lines hardcoded directly in the template (no
+// dangerouslySetInnerHTML quirks). Animation: a moving caret that
+// highlights the current line and a blinking REC indicator.
 ---
 
 <div class="terminal-demo reveal" aria-label="Animated demo of gitagent running an issue triage agent">
@@ -39,9 +19,24 @@ const lines = [
     </div>
   </div>
   <div class="terminal-body">
-    {lines.map((line, i) => (
-      <span class={`terminal-line t-${line.t}`} data-idx={i} dangerouslySetInnerHTML={line.html}></span>
-    ))}
+    <div class="terminal-line t-cmd"><span class="prompt">$</span> <span class="cmd">npx</span> <span class="arg">gitagent</span> <span class="arg">run</span> <span class="arg">triage</span> <span class="arg">--issue=42</span></div>
+    <div class="terminal-line t-out"><span class="dim">[14:23:01]</span> <span class="ok">●</span> loaded manifest <span class="cyan">triage.md</span></div>
+    <div class="terminal-line t-out"><span class="dim">[14:23:01]</span> <span class="ok">●</span> model <span class="cyan">claude-sonnet-4-5</span> · temperature <span class="cyan">0.1</span></div>
+    <div class="terminal-line t-out"><span class="dim">[14:23:02]</span> <span class="ok">●</span> context built: 1,247 tokens <span class="dim">(system + memory + event)</span></div>
+    <div class="terminal-line t-call"><span class="dim">[14:23:02]</span> <span class="amber">→</span> <span class="arg">llm.call</span> <span class="dim">(step 1 of 5)</span></div>
+    <div class="terminal-line t-out"><span class="dim">[14:23:03]</span> <span class="ok">●</span> tool call: <span class="arg">github.add_labels</span> input=<span class="cyan">&#123;issue_number:42, labels:[bug]&#125;</span></div>
+    <div class="terminal-line t-out"><span class="dim">[14:23:04]</span> <span class="ok">✓</span> labels added: <span class="ok">bug</span></div>
+    <div class="terminal-line t-call"><span class="dim">[14:23:04]</span> <span class="amber">→</span> <span class="arg">llm.call</span> <span class="dim">(step 2 of 5)</span></div>
+    <div class="terminal-line t-out"><span class="dim">[14:23:05]</span> <span class="ok">●</span> tool call: <span class="arg">github.post_comment</span></div>
+    <div class="terminal-line t-out">       body=<span class="cyan">"Thanks for the report — looking into this. cc @maintainer"</span></div>
+    <div class="terminal-line t-out"><span class="dim">[14:23:05]</span> <span class="ok">✓</span> comment posted <span class="dim">(id=</span><span class="cyan">291487</span><span class="dim">)</span></div>
+    <div class="terminal-line t-call"><span class="dim">[14:23:06]</span> <span class="amber">→</span> <span class="arg">llm.call</span> <span class="dim">(step 3 of 5)</span></div>
+    <div class="terminal-line t-out"><span class="dim">[14:23:06]</span> <span class="ok">●</span> tool call: <span class="arg">memory.write</span></div>
+    <div class="terminal-line t-out">       key=<span class="cyan">"triage:42:labels"</span> value=<span class="cyan">[bug]</span></div>
+    <div class="terminal-line t-out"><span class="dim">[14:23:07]</span> <span class="ok">✓</span> memory persisted</div>
+    <div class="terminal-line t-out"><span class="dim">[14:23:08]</span> <span class="ok">●</span> run complete · <span class="ok">3 tools · 4.2s · 847 tokens</span></div>
+    <div class="terminal-line t-ok">✓ <span class="ok">agent "triage" completed successfully</span></div>
+    <div class="terminal-line t-dim"><span class="dim">run_id: r-9b2c1d4e · cost: $0.024 · saved to: .gitagent/runs/2026-06-17/</span></div>
   </div>
 </div>
 
@@ -52,41 +47,30 @@ const lines = [
     const lines = term.querySelectorAll('.terminal-line');
     if (!lines.length) return;
 
-    // All lines are always visible. The animation is a moving caret that
-    // highlights the current step and tracks progress through the log.
+    // All lines are always visible. The animation: a moving highlight
+    // tracks the current line as a virtual "cursor" travels through.
     const speeds = { cmd: 900, call: 450, out: 200, ok: 700, dim: 200 };
     const total = lines.length;
-    const cyclePause = 3000; // pause when reaching the end
-    const restartFade = 400; // fade-out when restarting
+    const cyclePause = 2800;
+    const restartFade = 400;
 
     let idx = 0;
-    let stopped = false;
 
     function tick() {
-      if (stopped) return;
-      // Clear previous state
       lines.forEach(function (l) { l.classList.remove('current', 'past'); });
-      // Mark all preceding lines as past
       for (let i = 0; i < idx; i++) lines[i].classList.add('past');
-      // Highlight the current line
       if (idx < total) {
         lines[idx].classList.add('current');
-        // Auto-scroll to keep the current line in view
         try {
           const r = lines[idx].getBoundingClientRect();
           const tr = term.getBoundingClientRect();
-          if (r.bottom > tr.bottom - 40) {
-            term.scrollTop = term.scrollHeight;
-          }
+          if (r.bottom > tr.bottom - 40) term.scrollTop = term.scrollHeight;
         } catch (_) {}
       }
       idx++;
       if (idx > total) {
-        // Hold at the end, then restart
         setTimeout(function () {
-          if (stopped) return;
           term.scrollTop = 0;
-          // Brief fade-in by toggling opacity on the body
           term.style.transition = 'opacity ' + restartFade + 'ms ease';
           term.style.opacity = '0';
           setTimeout(function () {
@@ -103,13 +87,11 @@ const lines = [
       setTimeout(tick, wait);
     }
 
-    // Respect reduced motion — just mark all lines as past, freeze
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       lines.forEach(function (l) { l.classList.add('past'); });
       return;
     }
 
-    // REC clock — ticks every second
     let secs = 0;
     setInterval(function () {
       secs += 1;
@@ -119,7 +101,6 @@ const lines = [
       if (el) el.textContent = m + ':' + s;
     }, 1000);
 
-    // Start when the terminal scrolls into view
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver(function (entries) {
         if (entries.some(function (e) { return e.isIntersecting; })) {

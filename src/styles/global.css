@@ -568,10 +568,16 @@ pre code { background: none; border: none; padding: 0; color: inherit; }
   border-radius: 4px;
   opacity: 1;
   transition: background 0.25s var(--ease-out);
+  min-height: 1.5em;
 }
 
-.terminal-line.past { opacity: 0.55; }
-.terminal-line.current { background: rgba(0, 212, 255, 0.08); border-left: 2px solid var(--cyan); padding-left: 0.65rem; margin-left: -0.5rem; }
+.terminal-line.past { opacity: 0.5; }
+.terminal-line.current {
+  background: rgba(0, 212, 255, 0.08);
+  border-left: 2px solid var(--cyan);
+  padding-left: 0.6rem;
+  margin-left: -0.5rem;
+}
 
 /* Append a blinking caret to the current line */
 .terminal-line.current::after {
