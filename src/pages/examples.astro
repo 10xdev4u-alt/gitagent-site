@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const baseUrl = '/gitagent-site';
+const siteUrl = 'https://10xdev4u-alt.github.io';
+
+// Define the 13 example agents shipped with gitagent
+const examples = [
+  { name: 'triage',         triggers: 'issues.opened',  purpose: 'Auto-label and acknowledge new issues',        kind: 'support' },
+  { name: 'doc',            triggers: 'push.main',      purpose: 'Keep README and docs in sync with code',      kind: 'docs' },
+  { name: 'release',        triggers: 'release.published', purpose: 'Draft release notes from merged PRs',      kind: 'release' },
+  { name: 'welcome',        triggers: 'issues.opened',  purpose: 'Greet first-time contributors with care',     kind: 'community' },
+  { name: 'standup',        triggers: 'schedule.daily', purpose: 'Generate a daily standup digest',             kind: 'productivity' },
+  { name: 'security',       triggers: 'schedule.weekly', purpose: 'Scan deps, audit secret patterns',         kind: 'security' },
+  { name: 'dependencies',  triggers: 'schedule.weekly', purpose: 'Open issues for outdated dependencies',     kind: 'maintenance' },
+  { name: 'meta',           triggers: 'push.main',      purpose: 'Generate project changelog from commits',     kind: 'meta' },
+  { name: 'changelog',      triggers: 'release.published', purpose: 'Maintain CHANGELOG.md from PR history',  kind: 'meta' },
+  { name: 'tests',          triggers: 'pull_request.opened', purpose: 'Run validation test suites on PRs',     kind: 'quality' },
+  { name: 'oncall',         triggers: 'schedule.daily', purpose: 'Surface stale issues + unassigned PRs',      kind: 'ops' },
+  { name: 'weekly-summary', triggers: 'schedule.weekly', purpose: 'Post a weekly summary issue',               kind: 'productivity' },
+  { name: 'refactor-helper', triggers: 'pull_request.opened', purpose: 'Suggest small, safe refactorings',      kind: 'quality' },
+];
+
+const kindColor = {
+  support: 'cyan', docs: 'cyan', release: 'amber', community: 'magenta',
+  productivity: 'green', security: 'red', maintenance: 'amber', meta: 'cyan',
+  quality: 'green', ops: 'magenta',
+};
+---
+
+<BaseLayout
+  title="Examples"
+  description="13 production agent manifests shipped with gitagent — copy, customize, ship."
+>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href={`${baseUrl}/`} class="brand">
+        <span class="brand-mark" aria-hidden="true">10×</span>
+        <span>gitagent</span>
+        <span class="brand-version">v0.1.0</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href={`${baseUrl}/`}>home</a>
+        <a href={`${baseUrl}/examples`}>examples</a>
+        <a href={`${siteUrl}/gitagent`} rel="noopener">★ GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="padding-bottom: 1rem;">
+    <div class="container hero-inner">
+      <span class="hero-eyebrow reveal">
+        <span class="dot" aria-hidden="true"></span>
+        13 example agents · copy · customize · ship
+      </span>
+      <h1 class="reveal reveal-2">
+        The <em>13 examples</em><br />
+        that ship with gitagent.
+      </h1>
+      <p class="hero-sub reveal reveal-3">
+        Every one of these lives as a YAML file in <code>examples/</code>.
+        Copy it. Rename it. Tweak the model, the tools, the triggers. Ship
+        it as your own. They cover the 90% of agent use cases.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 1rem;">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; max-width: 1280px; margin: 0 auto;">
+        {examples.map((ex, i) => (
+          <div class="reveal" style={`padding: 1.5rem; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg); transition: all 0.2s var(--ease-out); transition-delay: ${(i % 6) * 50}ms;`}>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <span class="mono" style="font-size: 0.7rem; color: var(--fg-faint); letter-spacing: 0.05em;">{String(i + 1).padStart(2, '0')}</span>
+              <span class="mono" style={`font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--${kindColor[ex.kind] || 'cyan'}); padding: 0.15rem 0.4rem; background: color-mix(in oklab, var(--${kindColor[ex.kind] || 'cyan'}) 12%, transparent); border: 1px solid color-mix(in oklab, var(--${kindColor[ex.kind] || 'cyan'}) 30%, transparent); border-radius: 4px;`}>{ex.kind}</span>
+            </div>
+            <h3 style="font-family: var(--font-mono); font-size: 1.15rem; color: var(--fg); margin-bottom: 0.5rem;">{ex.name}</h3>
+            <p style="font-size: 0.88rem; color: var(--fg-muted); margin-bottom: 0.85rem; line-height: 1.5;">{ex.purpose}</p>
+            <div class="mono" style="font-size: 0.7rem; color: var(--fg-dim); display: flex; align-items: center; gap: 0.4rem;">
+              <span style="color: var(--green);">→</span>
+              <span>{ex.triggers}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style="text-align: center; margin-top: 4rem;">
+        <a href={`${siteUrl}/gitagent/tree/main/examples`} rel="noopener" class="btn btn-primary">
+          Browse all examples on GitHub →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 10xdev4u-alt · MIT licensed · built in public</div>
+        <div>
+          <a href={`${baseUrl}/`}>home</a> · <a href={`${siteUrl}/gitagent`} rel="noopener">source</a> · <a href={`${siteUrl}/gitagent/blob/main/CHANGELOG.md`} rel="noopener">changelog</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</BaseLayout>
