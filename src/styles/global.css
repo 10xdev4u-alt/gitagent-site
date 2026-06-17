@@ -563,15 +563,15 @@ pre code { background: none; border: none; padding: 0; color: inherit; }
   display: block;
   white-space: pre-wrap;
   word-break: break-all;
-  padding: 0.05rem 0.4rem;
-  margin: 0 -0.4rem;
+  padding: 0.1rem 0.5rem;
+  margin: 0 -0.5rem;
   border-radius: 4px;
-  opacity: 0.45;
-  transition: opacity 0.25s var(--ease-out), background 0.25s var(--ease-out);
+  opacity: 1;
+  transition: background 0.25s var(--ease-out);
 }
 
-.terminal-line.past { opacity: 0.75; }
-.terminal-line.current { opacity: 1; background: rgba(0, 212, 255, 0.06); }
+.terminal-line.past { opacity: 0.55; }
+.terminal-line.current { background: rgba(0, 212, 255, 0.08); border-left: 2px solid var(--cyan); padding-left: 0.65rem; margin-left: -0.5rem; }
 
 /* Append a blinking caret to the current line */
 .terminal-line.current::after {
@@ -581,15 +581,17 @@ pre code { background: none; border: none; padding: 0; color: inherit; }
   color: var(--cyan);
   animation: caret 1s steps(1) infinite;
   font-weight: 400;
+  vertical-align: baseline;
+  line-height: inherit;
 }
+
+.terminal-line.t-ok { color: var(--green); }
+.terminal-line.t-cmd { color: var(--fg); }
 
 @keyframes caret {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
 }
-
-.terminal-line.t-ok { color: var(--green); }
-.terminal-line.t-cmd { color: var(--fg); }
 
 .terminal-line .prompt { color: var(--green); user-select: none; }
 .terminal-line .cmd { color: var(--fg); }

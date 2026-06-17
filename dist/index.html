@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="generator" content="Astro v4.16.19"><title>undefined — gitagent</title><meta name="description" content="gitagent — open-source framework for declaring persistent, versioned AI agents that live in your GitHub repo. Defined as files. Run on real events. Built for the open-source era."><link rel="canonical" href="https://10xdev4u-alt.github.io/gitagent-site"><!-- Open Graph --><meta property="og:type" content="website"><meta property="og:site_name" content="gitagent"><meta property="og:title" content="undefined — gitagent"><meta property="og:description" content="gitagent — open-source framework for declaring persistent, versioned AI agents that live in your GitHub repo. Defined as files. Run on real events. Built for the open-source era."><meta property="og:url" content="https://10xdev4u-alt.github.io/gitagent-site"><meta property="og:image" content="https://10xdev4u-alt.github.io/gitagent-site/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="undefined — gitagent"><meta name="twitter:description" content="gitagent — open-source framework for declaring persistent, versioned AI agents that live in your GitHub repo. Defined as files. Run on real events. Built for the open-source era."><meta name="twitter:image" content="https://10xdev4u-alt.github.io/gitagent-site/og.png"><meta name="theme-color" content="#06080c"><meta name="color-scheme" content="dark"><link rel="icon" type="image/svg+xml" href="/gitagent-site/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="/gitagent-site/_astro/style.DuqisGMk.css"></head> <body> <div class="cursor-light" id="cursor-light" aria-hidden="true"></div>  <header class="site-header"> <div class="container header-inner"> <a href="/gitagent-site/" class="brand"> <span class="brand-mark" aria-hidden="true">10×</span> <span>gitagent</span> <span class="brand-version">v0.1.0</span> </a> <nav class="nav" aria-label="Primary"> <a href="/gitagent-site/#why">why</a> <a href="/gitagent-site/#playground">playground</a> <a href="/gitagent-site/#tools">tools</a> <a href="/gitagent-site/#memory">memory</a> <a href="https://github.com/10xdev4u-alt/gitagent" rel="noopener" class="btn btn-ghost btn-mono">★ GitHub</a> </nav> </div> </header>  <section class="hero"> <div class="container hero-inner"> <span class="hero-eyebrow reveal"> <span class="dot" aria-hidden="true"></span>
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="generator" content="Astro v4.16.19"><title>undefined — gitagent</title><meta name="description" content="gitagent — open-source framework for declaring persistent, versioned AI agents that live in your GitHub repo. Defined as files. Run on real events. Built for the open-source era."><link rel="canonical" href="https://10xdev4u-alt.github.io/gitagent-site"><!-- Open Graph --><meta property="og:type" content="website"><meta property="og:site_name" content="gitagent"><meta property="og:title" content="undefined — gitagent"><meta property="og:description" content="gitagent — open-source framework for declaring persistent, versioned AI agents that live in your GitHub repo. Defined as files. Run on real events. Built for the open-source era."><meta property="og:url" content="https://10xdev4u-alt.github.io/gitagent-site"><meta property="og:image" content="https://10xdev4u-alt.github.io/gitagent-site/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="undefined — gitagent"><meta name="twitter:description" content="gitagent — open-source framework for declaring persistent, versioned AI agents that live in your GitHub repo. Defined as files. Run on real events. Built for the open-source era."><meta name="twitter:image" content="https://10xdev4u-alt.github.io/gitagent-site/og.png"><meta name="theme-color" content="#06080c"><meta name="color-scheme" content="dark"><link rel="icon" type="image/svg+xml" href="/gitagent-site/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="/gitagent-site/_astro/style.B7reRHY6.css"></head> <body> <div class="cursor-light" id="cursor-light" aria-hidden="true"></div>  <header class="site-header"> <div class="container header-inner"> <a href="/gitagent-site/" class="brand"> <span class="brand-mark" aria-hidden="true">10×</span> <span>gitagent</span> <span class="brand-version">v0.1.0</span> </a> <nav class="nav" aria-label="Primary"> <a href="/gitagent-site/#why">why</a> <a href="/gitagent-site/#playground">playground</a> <a href="/gitagent-site/#tools">tools</a> <a href="/gitagent-site/#memory">memory</a> <a href="https://github.com/10xdev4u-alt/gitagent" rel="noopener" class="btn btn-ghost btn-mono">★ GitHub</a> </nav> </div> </header>  <section class="hero"> <div class="container hero-inner"> <span class="hero-eyebrow reveal"> <span class="dot" aria-hidden="true"></span>
 v0.1.0 · 101 commits · 391 tests · 17 tools · MIT
 </span> <h1 class="reveal reveal-2">
 Agents that <em>live in your repo</em>,<br>
@@ -20,51 +20,64 @@ A real <code>gitagent</code> command, run against a real GitHub
     const lines = term.querySelectorAll('.terminal-line');
     if (!lines.length) return;
 
-    // Always-visible baseline — never blank.
-    // We add a `.current` class to one line at a time, then advance.
-    let idx = 0;
-    const speeds = { cmd: 700, call: 350, out: 200, ok: 600, dim: 200 };
+    // All lines are always visible. The animation is a moving caret that
+    // highlights the current step and tracks progress through the log.
+    const speeds = { cmd: 900, call: 450, out: 200, ok: 700, dim: 200 };
+    const total = lines.length;
+    const cyclePause = 3000; // pause when reaching the end
+    const restartFade = 400; // fade-out when restarting
 
-    function advance() {
-      // Clear previous
+    let idx = 0;
+    let stopped = false;
+
+    function tick() {
+      if (stopped) return;
+      // Clear previous state
       lines.forEach(function (l) { l.classList.remove('current', 'past'); });
-      // Mark past + current
+      // Mark all preceding lines as past
       for (let i = 0; i < idx; i++) lines[i].classList.add('past');
-      if (idx < lines.length) {
+      // Highlight the current line
+      if (idx < total) {
         lines[idx].classList.add('current');
-        // Scroll into view if needed
-        const l = lines[idx];
-        const r = l.getBoundingClientRect();
-        const tr = term.getBoundingClientRect();
-        if (r.bottom > tr.bottom - 20) {
-          term.scrollTop = term.scrollHeight;
-        }
+        // Auto-scroll to keep the current line in view
+        try {
+          const r = lines[idx].getBoundingClientRect();
+          const tr = term.getBoundingClientRect();
+          if (r.bottom > tr.bottom - 40) {
+            term.scrollTop = term.scrollHeight;
+          }
+        } catch (_) {}
       }
       idx++;
-      if (idx > lines.length + 4) {
-        // Hold for a moment, then restart
+      if (idx > total) {
+        // Hold at the end, then restart
         setTimeout(function () {
-          idx = 0;
+          if (stopped) return;
           term.scrollTop = 0;
-          advance();
-        }, 2200);
+          // Brief fade-in by toggling opacity on the body
+          term.style.transition = 'opacity ' + restartFade + 'ms ease';
+          term.style.opacity = '0';
+          setTimeout(function () {
+            idx = 0;
+            term.style.opacity = '1';
+            tick();
+          }, restartFade);
+        }, cyclePause);
         return;
       }
-      const lastT = idx > 0 ? lines[Math.min(idx - 1, lines.length - 1)].className.match(/t-(\w+)/) : null;
+      const lastT = idx > 0 ? lines[Math.min(idx - 1, total - 1)].className.match(/t-(\w+)/) : null;
       const t = lastT ? lastT[1] : 'out';
       const wait = speeds[t] || 250;
-      setTimeout(advance, wait);
+      setTimeout(tick, wait);
     }
 
-    // Respect reduced motion — just mark all lines, no advancement
+    // Respect reduced motion — just mark all lines as past, freeze
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       lines.forEach(function (l) { l.classList.add('past'); });
-      const rec = document.querySelector('.rec-time');
-      if (rec) rec.textContent = '00:00';
       return;
     }
 
-    // REC clock
+    // REC clock — ticks every second
     let secs = 0;
     setInterval(function () {
       secs += 1;
@@ -74,18 +87,17 @@ A real <code>gitagent</code> command, run against a real GitHub
       if (el) el.textContent = m + ':' + s;
     }, 1000);
 
-    // Start the animation as soon as the terminal is on screen
-    const start = function () { advance(); };
+    // Start when the terminal scrolls into view
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver(function (entries) {
         if (entries.some(function (e) { return e.isIntersecting; })) {
           io.disconnect();
-          start();
+          tick();
         }
       }, { threshold: 0.15 });
       io.observe(term);
     } else {
-      start();
+      tick();
     }
   })();
 </script> </div> </section>  <section class="section" id="playground"> <div class="container"> <div class="section-head reveal"> <span class="section-eyebrow">02 · manifest playground</span> <h2>Edit the manifest.<br><span style="color: var(--cyan);">See the agent change.</span></h2> <p class="section-lede">

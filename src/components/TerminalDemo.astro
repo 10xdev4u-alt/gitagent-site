@@ -52,51 +52,64 @@ const lines = [
     const lines = term.querySelectorAll('.terminal-line');
     if (!lines.length) return;
 
-    // Always-visible baseline — never blank.
-    // We add a `.current` class to one line at a time, then advance.
-    let idx = 0;
-    const speeds = { cmd: 700, call: 350, out: 200, ok: 600, dim: 200 };
+    // All lines are always visible. The animation is a moving caret that
+    // highlights the current step and tracks progress through the log.
+    const speeds = { cmd: 900, call: 450, out: 200, ok: 700, dim: 200 };
+    const total = lines.length;
+    const cyclePause = 3000; // pause when reaching the end
+    const restartFade = 400; // fade-out when restarting
 
-    function advance() {
-      // Clear previous
+    let idx = 0;
+    let stopped = false;
+
+    function tick() {
+      if (stopped) return;
+      // Clear previous state
       lines.forEach(function (l) { l.classList.remove('current', 'past'); });
-      // Mark past + current
+      // Mark all preceding lines as past
       for (let i = 0; i < idx; i++) lines[i].classList.add('past');
-      if (idx < lines.length) {
+      // Highlight the current line
+      if (idx < total) {
         lines[idx].classList.add('current');
-        // Scroll into view if needed
-        const l = lines[idx];
-        const r = l.getBoundingClientRect();
-        const tr = term.getBoundingClientRect();
-        if (r.bottom > tr.bottom - 20) {
-          term.scrollTop = term.scrollHeight;
-        }
+        // Auto-scroll to keep the current line in view
+        try {
+          const r = lines[idx].getBoundingClientRect();
+          const tr = term.getBoundingClientRect();
+          if (r.bottom > tr.bottom - 40) {
+            term.scrollTop = term.scrollHeight;
+          }
+        } catch (_) {}
       }
       idx++;
-      if (idx > lines.length + 4) {
-        // Hold for a moment, then restart
+      if (idx > total) {
+        // Hold at the end, then restart
         setTimeout(function () {
-          idx = 0;
+          if (stopped) return;
           term.scrollTop = 0;
-          advance();
-        }, 2200);
+          // Brief fade-in by toggling opacity on the body
+          term.style.transition = 'opacity ' + restartFade + 'ms ease';
+          term.style.opacity = '0';
+          setTimeout(function () {
+            idx = 0;
+            term.style.opacity = '1';
+            tick();
+          }, restartFade);
+        }, cyclePause);
         return;
       }
-      const lastT = idx > 0 ? lines[Math.min(idx - 1, lines.length - 1)].className.match(/t-(\w+)/) : null;
+      const lastT = idx > 0 ? lines[Math.min(idx - 1, total - 1)].className.match(/t-(\w+)/) : null;
       const t = lastT ? lastT[1] : 'out';
       const wait = speeds[t] || 250;
-      setTimeout(advance, wait);
+      setTimeout(tick, wait);
     }
 
-    // Respect reduced motion — just mark all lines, no advancement
+    // Respect reduced motion — just mark all lines as past, freeze
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       lines.forEach(function (l) { l.classList.add('past'); });
-      const rec = document.querySelector('.rec-time');
-      if (rec) rec.textContent = '00:00';
       return;
     }
 
-    // REC clock
+    // REC clock — ticks every second
     let secs = 0;
     setInterval(function () {
       secs += 1;
@@ -106,18 +119,17 @@ const lines = [
       if (el) el.textContent = m + ':' + s;
     }, 1000);
 
-    // Start the animation as soon as the terminal is on screen
-    const start = function () { advance(); };
+    // Start when the terminal scrolls into view
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver(function (entries) {
         if (entries.some(function (e) { return e.isIntersecting; })) {
           io.disconnect();
-          start();
+          tick();
         }
       }, { threshold: 0.15 });
       io.observe(term);
     } else {
-      start();
+      tick();
     }
   })();
 </script>
