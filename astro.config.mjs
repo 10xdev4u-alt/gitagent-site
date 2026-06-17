@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   site: 'https://10xdev4u-alt.github.io',
-  base: '/gitagent',
+  base: '/gitagent-site',
   output: 'static',
   build: {
     format: 'directory',
