@@ -1,25 +1,26 @@
 ---
-// TerminalDemo — animated terminal showing a real agent run
+// TerminalDemo — lines are always visible. A blinking "current" caret
+// travels down the log to show progress. This is robust to JS timing
+// and never leaves the user with a blank terminal.
 const lines = [
   { t: 'cmd',  html: '<span class="prompt">$</span> <span class="cmd">npx</span> <span class="arg">gitagent</span> <span class="arg">run</span> <span class="arg">triage</span> <span class="arg">--issue=42</span>' },
   { t: 'out',  html: '<span class="dim">[14:23:01]</span> <span class="ok">●</span> loaded manifest <span class="cyan">triage.md</span>' },
   { t: 'out',  html: '<span class="dim">[14:23:01]</span> <span class="ok">●</span> model <span class="cyan">claude-sonnet-4-5</span> · temperature <span class="cyan">0.1</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:02]</span> <span class="ok">●</span> context built: 1,247 tokens (system + memory + event)' },
-  { t: 'out',  html: '<span class="dim">[14:23:02]</span> <span class="accent">→</span> llm.call <span class="dim">(step 1 of 5)</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:03]</span> <span class="ok">●</span> tool call: <span class="arg">github.add_labels</span> input=<span class="cyan">{"issue_number":42,"labels":["bug"]}</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:02]</span> <span class="ok">●</span> context built: 1,247 tokens <span class="dim">(system + memory + event)</span>' },
+  { t: 'call', html: '<span class="dim">[14:23:02]</span> <span class="amber">→</span> <span class="arg">llm.call</span> <span class="dim">(step 1 of 5)</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:03]</span> <span class="ok">●</span> tool call: <span class="arg">github.add_labels</span> input=<span class="cyan">{issue_number:42, labels:[bug]}</span>' },
   { t: 'out',  html: '<span class="dim">[14:23:04]</span> <span class="ok">✓</span> labels added: <span class="ok">bug</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:04]</span> <span class="accent">→</span> llm.call <span class="dim">(step 2 of 5)</span>' },
+  { t: 'call', html: '<span class="dim">[14:23:04]</span> <span class="amber">→</span> <span class="arg">llm.call</span> <span class="dim">(step 2 of 5)</span>' },
   { t: 'out',  html: '<span class="dim">[14:23:05]</span> <span class="ok">●</span> tool call: <span class="arg">github.post_comment</span>' },
-  { t: 'out',  html: '      body=<span class="cyan">"Thanks for the report — looking into this. cc @maintainer"</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:05]</span> <span class="ok">✓</span> comment posted (id=<span class="cyan">291487</span>)' },
-  { t: 'out',  html: '<span class="dim">[14:23:06]</span> <span class="accent">→</span> llm.call <span class="dim">(step 3 of 5)</span>' },
-  { t: 'out',  html: '<span class="dim">[14:23:07]</span> <span class="ok">●</span> tool call: <span class="arg">memory.write</span>' },
-  { t: 'out',  html: '      key=<span class="cyan">"triage:42:labels"</span> value=<span class="cyan">["bug"]</span>' },
+  { t: 'out',  html: '        body=<span class="cyan">"Thanks for the report — looking into this. cc @maintainer"</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:05]</span> <span class="ok">✓</span> comment posted <span class="dim">(id=</span><span class="cyan">291487</span><span class="dim">)</span>' },
+  { t: 'call', html: '<span class="dim">[14:23:06]</span> <span class="amber">→</span> <span class="arg">llm.call</span> <span class="dim">(step 3 of 5)</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:06]</span> <span class="ok">●</span> tool call: <span class="arg">memory.write</span>' },
+  { t: 'out',  html: '        key=<span class="cyan">"triage:42:labels"</span> value=<span class="cyan">[bug]</span>' },
   { t: 'out',  html: '<span class="dim">[14:23:07]</span> <span class="ok">✓</span> memory persisted' },
   { t: 'out',  html: '<span class="dim">[14:23:08]</span> <span class="ok">●</span> run complete · <span class="ok">3 tools · 4.2s · 847 tokens</span>' },
   { t: 'ok',   html: '<span class="ok">✓</span> <span class="ok">agent "triage" completed successfully</span>' },
   { t: 'dim',  html: '<span class="dim">run_id: r-9b2c1d4e · cost: $0.024 · saved to: .gitagent/runs/2026-06-17/</span>' },
-  { t: 'cursor' },
 ];
 ---
 
@@ -31,48 +32,92 @@ const lines = [
       <span class="dot g"></span>
     </div>
     <div class="title">~/projects/gitagent — zsh — 80×24</div>
-    <div style="width: 52px;"></div>
+    <div class="rec">
+      <span class="rec-dot" aria-hidden="true"></span>
+      <span class="rec-label">REC</span>
+      <span class="rec-time" id="rec-time">00:00</span>
+    </div>
   </div>
-  <div class="terminal-body" id="term">
-    {lines.map((line) => (
-      <span class="terminal-line" data-type={line.t} dangerouslySetInnerHTML={line.html ?? ''}></span>
+  <div class="terminal-body">
+    {lines.map((line, i) => (
+      <span class={`terminal-line t-${line.t}`} data-idx={i} dangerouslySetInnerHTML={line.html}></span>
     ))}
   </div>
 </div>
 
 <script is:inline>
   (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const term = document.getElementById('term');
+    const term = document.querySelector('.terminal-demo .terminal-body');
     if (!term) return;
-    const spans = term.querySelectorAll('.terminal-line');
-    spans.forEach(function (s) { s.style.display = 'none'; });
+    const lines = term.querySelectorAll('.terminal-line');
+    if (!lines.length) return;
 
+    // Always-visible baseline — never blank.
+    // We add a `.current` class to one line at a time, then advance.
     let idx = 0;
-    const speed = 220;
-    function show() {
-      if (idx >= spans.length) {
+    const speeds = { cmd: 700, call: 350, out: 200, ok: 600, dim: 200 };
+
+    function advance() {
+      // Clear previous
+      lines.forEach(function (l) { l.classList.remove('current', 'past'); });
+      // Mark past + current
+      for (let i = 0; i < idx; i++) lines[i].classList.add('past');
+      if (idx < lines.length) {
+        lines[idx].classList.add('current');
+        // Scroll into view if needed
+        const l = lines[idx];
+        const r = l.getBoundingClientRect();
+        const tr = term.getBoundingClientRect();
+        if (r.bottom > tr.bottom - 20) {
+          term.scrollTop = term.scrollHeight;
+        }
+      }
+      idx++;
+      if (idx > lines.length + 4) {
+        // Hold for a moment, then restart
         setTimeout(function () {
-          spans.forEach(function (s) { s.style.display = 'none'; });
           idx = 0;
-          show();
-        }, 4000);
+          term.scrollTop = 0;
+          advance();
+        }, 2200);
         return;
       }
-      const s = spans[idx];
-      s.style.display = 'block';
-      idx++;
-      const t = s.getAttribute('data-type');
-      const wait = t === 'cmd' ? 600 : t === 'cursor' ? 1200 : speed;
-      setTimeout(show, wait);
+      const lastT = idx > 0 ? lines[Math.min(idx - 1, lines.length - 1)].className.match(/t-(\w+)/) : null;
+      const t = lastT ? lastT[1] : 'out';
+      const wait = speeds[t] || 250;
+      setTimeout(advance, wait);
     }
-    // Start once it's in view
-    const io = new IntersectionObserver(function (entries) {
-      if (entries.some(function (e) { return e.isIntersecting; })) {
-        io.disconnect();
-        show();
-      }
-    }, { threshold: 0.3 });
-    io.observe(term);
+
+    // Respect reduced motion — just mark all lines, no advancement
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      lines.forEach(function (l) { l.classList.add('past'); });
+      const rec = document.querySelector('.rec-time');
+      if (rec) rec.textContent = '00:00';
+      return;
+    }
+
+    // REC clock
+    let secs = 0;
+    setInterval(function () {
+      secs += 1;
+      const m = String(Math.floor(secs / 60)).padStart(2, '0');
+      const s = String(secs % 60).padStart(2, '0');
+      const el = document.getElementById('rec-time');
+      if (el) el.textContent = m + ':' + s;
+    }, 1000);
+
+    // Start the animation as soon as the terminal is on screen
+    const start = function () { advance(); };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(function (entries) {
+        if (entries.some(function (e) { return e.isIntersecting; })) {
+          io.disconnect();
+          start();
+        }
+      }, { threshold: 0.15 });
+      io.observe(term);
+    } else {
+      start();
+    }
   })();
 </script>

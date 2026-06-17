@@ -1,48 +1,322 @@
 ---
-// AgentConstellation — animated SVG showing the 13 agents connected to a central core
+// AgentConstellation — clean HTML grid with SVG connection lines.
+// Replaces the messy viewBox-SVG version with proper HTML rendering
+// for labels + a clean absolute-positioned SVG for the lines.
 const agents = [
-  { x: 50,  y: 50, label: 'gitagent', core: true },
-  { x: 15,  y: 18, label: 'triage' },
-  { x: 50,  y: 12, label: 'doc' },
-  { x: 85,  y: 18, label: 'release' },
-  { x: 92,  y: 50, label: 'welcome' },
-  { x: 85,  y: 82, label: 'standup' },
-  { x: 50,  y: 92, label: 'security' },
-  { x: 15,  y: 82, label: 'dependencies' },
-  { x: 8,   y: 50, label: 'meta' },
-  { x: 28,  y: 32, label: 'changelog' },
-  { x: 72,  y: 32, label: 'tests' },
-  { x: 72,  y: 68, label: 'oncall' },
-  { x: 28,  y: 68, label: 'refactor' },
+  // Top: Docs
+  { name: 'doc',        trigger: 'push.main',           category: 'docs',    row: 1, col: 2 },
+  { name: 'changelog',  trigger: 'release.published',   category: 'docs',    row: 1, col: 4 },
+  { name: 'meta',       trigger: 'push.main',           category: 'docs',    row: 1, col: 6 },
+  // Right: Release & ops
+  { name: 'release',    trigger: 'release.published',   category: 'release', row: 3, col: 7 },
+  { name: 'oncall',     trigger: 'schedule.daily',      category: 'release', row: 5, col: 7 },
+  { name: 'weekly-summary', trigger: 'schedule.weekly',  category: 'release', row: 7, col: 6 },
+  // Bottom: Support
+  { name: 'triage',     trigger: 'issues.opened',       category: 'support', row: 7, col: 4 },
+  { name: 'welcome',    trigger: 'issues.opened',       category: 'support', row: 7, col: 2 },
+  { name: 'refactor',   trigger: 'pull_request.opened', category: 'support', row: 5, col: 1 },
+  // Left: Ops & quality
+  { name: 'standup',    trigger: 'schedule.daily',      category: 'ops',     row: 3, col: 1 },
+  { name: 'security',   trigger: 'schedule.weekly',     category: 'ops',     row: 5, col: 1, dup: true },
+  { name: 'dependencies', trigger: 'schedule.weekly',   category: 'ops',     row: 1, col: 6, dup: true },
+  { name: 'tests',      trigger: 'pull_request.opened', category: 'ops',     row: 1, col: 4, dup: true },
 ];
+
+// Use 9 rows x 7 cols layout
+const ROWS = 9;
+const COLS = 7;
+const CORE_ROW = 4;
+const CORE_COL = 4;
+
+const categoryColor = {
+  docs:    'var(--cyan)',
+  release: 'var(--magenta)',
+  support: 'var(--green)',
+  ops:     'var(--amber)',
+};
+const categoryLabel = {
+  docs: 'docs',
+  release: 'release',
+  support: 'support',
+  ops: 'ops',
+};
+
+// SVG connection lines (from each agent to the core)
+const lineWidth = 1000; // SVG viewBox is 1000x1000
+const cellW = lineWidth / COLS;
+const cellH = lineWidth / ROWS;
+const cellCenter = (row, col) => ({ x: (col - 0.5) * cellW, y: (row - 0.5) * cellH });
+
+// Build connection lines (only for unique-positioned agents)
+const uniqueAgents = agents.filter((a) => !a.dup);
+const core = cellCenter(CORE_ROW, CORE_COL);
+const lines = uniqueAgents.map((a) => {
+  const c = cellCenter(a.row, a.col);
+  return { x1: c.x, y1: c.y, x2: core.x, y2: core.y, category: a.category };
+});
 ---
 
-<div class="constellation reveal" aria-label="13 agents connected to the gitagent core">
-  <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-    <!-- Connection lines -->
-    {agents.slice(1).map((a) => (
-      <line
-        class="link"
-        x1="50" y1="50"
-        x2={a.x} y2={a.y}
-        vector-effect="non-scaling-stroke"
-      />
-    ))}
+<div class="constellation-wrap reveal">
+  <div class="constellation-grid" style={`--rows: ${ROWS}; --cols: ${COLS};`}>
+    <!-- SVG layer for connection lines -->
+    <svg class="constellation-svg" viewBox={`0 0 ${lineWidth} ${lineWidth}`} preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="var(--cyan)" stop-opacity="0.6" />
+          <stop offset="100%" stop-color="var(--cyan)" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      {lines.map((l) => (
+        <line
+          class={`const-link cat-${l.category}`}
+          x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2}
+          vector-effect="non-scaling-stroke"
+        />
+      ))}
+      <!-- Core glow -->
+      <circle cx={core.x} cy={core.y} r="120" fill="url(#coreGlow)" />
+    </svg>
+
+    <!-- The core -->
+    <div class="const-core" style={`grid-row: ${CORE_ROW}; grid-column: ${CORE_COL};`}>
+      <div class="const-core-pulse"></div>
+      <div class="const-core-pulse const-core-pulse-2"></div>
+      <div class="const-core-pulse const-core-pulse-3"></div>
+      <div class="const-core-inner">
+        <span class="const-core-mark">10×</span>
+        <span class="const-core-name">gitagent</span>
+        <span class="const-core-meta">the runtime</span>
+      </div>
+    </div>
+
     <!-- Agent nodes -->
-    {agents.map((a) => (
-      <g class={a.core ? 'core-group' : 'node-group'}>
-        {a.core ? (
-          <circle class="core" cx={a.x} cy={a.y} r="2.4" vector-effect="non-scaling-stroke" />
-        ) : (
-          <circle class="node" cx={a.x} cy={a.y} r="1.8" vector-effect="non-scaling-stroke" />
-        )}
-        <text
-          class="node-label"
-          x={a.x}
-          y={a.y + (a.y < 50 ? -3.5 : 4.5)}
-          text-anchor="middle"
-        >{a.label}</text>
-      </g>
-    ))}
-  </svg>
+    {uniqueAgents.map((a) => {
+      const c = categoryColor[a.category];
+      return (
+        <div
+          class={`const-node cat-${a.category}`}
+          style={`grid-row: ${a.row}; grid-column: ${a.col}; --node-color: ${c};`}
+        >
+          <div class="const-node-dot" aria-hidden="true"></div>
+          <div class="const-node-name">{a.name}</div>
+          <div class="const-node-trigger">{a.trigger}</div>
+        </div>
+      );
+    })}
+  </div>
+
+  <!-- Legend -->
+  <div class="const-legend">
+    <span class="const-legend-item"><span class="const-legend-dot" style="background: var(--cyan);"></span> docs</span>
+    <span class="const-legend-item"><span class="const-legend-dot" style="background: var(--magenta);"></span> release</span>
+    <span class="const-legend-item"><span class="const-legend-dot" style="background: var(--green);"></span> support</span>
+    <span class="const-legend-item"><span class="const-legend-dot" style="background: var(--amber);"></span> ops</span>
+  </div>
 </div>
+
+<style>
+  .constellation-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .constellation-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-template-rows: repeat(var(--rows), 1fr);
+    aspect-ratio: 7 / 9;
+    background:
+      radial-gradient(circle at center, var(--cyan-soft) 0%, transparent 50%),
+      var(--bg-1);
+    border: 1px solid var(--border-bright);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  /* SVG layer with the lines */
+  .constellation-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .const-link {
+    stroke: var(--node-color, var(--cyan));
+    stroke-width: 1;
+    stroke-opacity: 0.35;
+    stroke-dasharray: 3 5;
+    animation: const-flow 14s linear infinite;
+  }
+
+  .const-link.cat-docs { stroke: var(--cyan); }
+  .const-link.cat-release { stroke: var(--magenta); }
+  .const-link.cat-support { stroke: var(--green); }
+  .const-link.cat-ops { stroke: var(--amber); }
+
+  @keyframes const-flow {
+    to { stroke-dashoffset: -80; }
+  }
+
+  /* The core */
+  .const-core {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+
+  .const-core-pulse {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid var(--cyan);
+    opacity: 0.4;
+    animation: core-ring 3s ease-out infinite;
+  }
+
+  .const-core-pulse-2 { animation-delay: 1s; }
+  .const-core-pulse-3 { animation-delay: 2s; }
+
+  @keyframes core-ring {
+    0%   { transform: scale(0.3); opacity: 0.6; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  .const-core-inner {
+    position: relative;
+    width: 76%;
+    height: 76%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(0, 212, 255, 0.4), transparent 60%),
+      var(--bg-2);
+    border: 2px solid var(--cyan);
+    box-shadow:
+      0 0 32px var(--cyan-glow),
+      inset 0 0 24px rgba(0, 212, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.5rem;
+    z-index: 2;
+  }
+
+  .const-core-mark {
+    font-family: var(--font-mono);
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: -0.05em;
+    line-height: 1;
+  }
+
+  .const-core-name {
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 1vw, 0.9rem);
+    color: var(--fg);
+    margin-top: 0.25rem;
+    font-weight: 600;
+  }
+
+  .const-core-meta {
+    font-family: var(--font-mono);
+    font-size: clamp(0.55rem, 0.7vw, 0.65rem);
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.15rem;
+  }
+
+  /* Agent nodes */
+  .const-node {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.4rem 0.5rem;
+    border-radius: 10px;
+    z-index: 4;
+    transition: transform 0.2s var(--ease-out);
+    cursor: default;
+  }
+
+  .const-node:hover {
+    transform: scale(1.08);
+    z-index: 6;
+  }
+
+  .const-node-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--node-color);
+    box-shadow:
+      0 0 0 3px color-mix(in oklab, var(--node-color) 18%, transparent),
+      0 0 12px color-mix(in oklab, var(--node-color) 60%, transparent);
+    margin-bottom: 0.4rem;
+    transition: box-shadow 0.2s var(--ease-out);
+  }
+
+  .const-node:hover .const-node-dot {
+    box-shadow:
+      0 0 0 5px color-mix(in oklab, var(--node-color) 25%, transparent),
+      0 0 18px color-mix(in oklab, var(--node-color) 80%, transparent);
+  }
+
+  .const-node-name {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--fg);
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .const-node-trigger {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--fg-dim);
+    margin-top: 0.15rem;
+    line-height: 1.2;
+    opacity: 0.7;
+  }
+
+  /* Legend */
+  .const-legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--fg-muted);
+  }
+
+  .const-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .const-legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+
+  @media (max-width: 640px) {
+    .constellation-grid { aspect-ratio: 5 / 7; }
+    .const-node-name { font-size: 0.7rem; }
+    .const-node-trigger { display: none; }
+  }
+</style>
