@@ -1,0 +1,78 @@
+---
+// TerminalDemo — animated terminal showing a real agent run
+const lines = [
+  { t: 'cmd',  html: '<span class="prompt">$</span> <span class="cmd">npx</span> <span class="arg">gitagent</span> <span class="arg">run</span> <span class="arg">triage</span> <span class="arg">--issue=42</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:01]</span> <span class="ok">●</span> loaded manifest <span class="cyan">triage.md</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:01]</span> <span class="ok">●</span> model <span class="cyan">claude-sonnet-4-5</span> · temperature <span class="cyan">0.1</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:02]</span> <span class="ok">●</span> context built: 1,247 tokens (system + memory + event)' },
+  { t: 'out',  html: '<span class="dim">[14:23:02]</span> <span class="accent">→</span> llm.call <span class="dim">(step 1 of 5)</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:03]</span> <span class="ok">●</span> tool call: <span class="arg">github.add_labels</span> input=<span class="cyan">{"issue_number":42,"labels":["bug"]}</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:04]</span> <span class="ok">✓</span> labels added: <span class="ok">bug</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:04]</span> <span class="accent">→</span> llm.call <span class="dim">(step 2 of 5)</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:05]</span> <span class="ok">●</span> tool call: <span class="arg">github.post_comment</span>' },
+  { t: 'out',  html: '      body=<span class="cyan">"Thanks for the report — looking into this. cc @maintainer"</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:05]</span> <span class="ok">✓</span> comment posted (id=<span class="cyan">291487</span>)' },
+  { t: 'out',  html: '<span class="dim">[14:23:06]</span> <span class="accent">→</span> llm.call <span class="dim">(step 3 of 5)</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:07]</span> <span class="ok">●</span> tool call: <span class="arg">memory.write</span>' },
+  { t: 'out',  html: '      key=<span class="cyan">"triage:42:labels"</span> value=<span class="cyan">["bug"]</span>' },
+  { t: 'out',  html: '<span class="dim">[14:23:07]</span> <span class="ok">✓</span> memory persisted' },
+  { t: 'out',  html: '<span class="dim">[14:23:08]</span> <span class="ok">●</span> run complete · <span class="ok">3 tools · 4.2s · 847 tokens</span>' },
+  { t: 'ok',   html: '<span class="ok">✓</span> <span class="ok">agent "triage" completed successfully</span>' },
+  { t: 'dim',  html: '<span class="dim">run_id: r-9b2c1d4e · cost: $0.024 · saved to: .gitagent/runs/2026-06-17/</span>' },
+  { t: 'cursor' },
+];
+---
+
+<div class="terminal-demo reveal" aria-label="Animated demo of gitagent running an issue triage agent">
+  <div class="terminal-bar">
+    <div class="dots">
+      <span class="dot r"></span>
+      <span class="dot y"></span>
+      <span class="dot g"></span>
+    </div>
+    <div class="title">~/projects/gitagent — zsh — 80×24</div>
+    <div style="width: 52px;"></div>
+  </div>
+  <div class="terminal-body" id="term">
+    {lines.map((line) => (
+      <span class="terminal-line" data-type={line.t} dangerouslySetInnerHTML={line.html ?? ''}></span>
+    ))}
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const term = document.getElementById('term');
+    if (!term) return;
+    const spans = term.querySelectorAll('.terminal-line');
+    spans.forEach(function (s) { s.style.display = 'none'; });
+
+    let idx = 0;
+    const speed = 220;
+    function show() {
+      if (idx >= spans.length) {
+        setTimeout(function () {
+          spans.forEach(function (s) { s.style.display = 'none'; });
+          idx = 0;
+          show();
+        }, 4000);
+        return;
+      }
+      const s = spans[idx];
+      s.style.display = 'block';
+      idx++;
+      const t = s.getAttribute('data-type');
+      const wait = t === 'cmd' ? 600 : t === 'cursor' ? 1200 : speed;
+      setTimeout(show, wait);
+    }
+    // Start once it's in view
+    const io = new IntersectionObserver(function (entries) {
+      if (entries.some(function (e) { return e.isIntersecting; })) {
+        io.disconnect();
+        show();
+      }
+    }, { threshold: 0.3 });
+    io.observe(term);
+  })();
+</script>

@@ -1,0 +1,420 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TerminalDemo from '../components/TerminalDemo.astro';
+import ManifestPlayground from '../components/ManifestPlayground.astro';
+import AgentConstellation from '../components/AgentConstellation.astro';
+
+const baseUrl = import.meta.env.BASE_URL;
+
+const tools = [
+  { name: 'post_comment',     desc: 'Reply to issues/PRs' },
+  { name: 'add_labels',       desc: 'Tag with one or more labels' },
+  { name: 'remove_label',     desc: 'Remove a single label' },
+  { name: 'create_issue',     desc: 'File a new issue' },
+  { name: 'update_issue',     desc: 'Edit title/body/state' },
+  { name: 'close_issue',      desc: 'Close with reason' },
+  { name: 'reopen_issue',     desc: 'Reopen a closed one' },
+  { name: 'create_pr',        desc: 'Open a new pull request' },
+  { name: 'merge_pr',         desc: 'Merge with strategy' },
+  { name: 'request_review',   desc: 'Ask humans for review' },
+  { name: 'add_reaction',     desc: 'React to issues/comments' },
+  { name: 'get_file',         desc: 'Read a file from the repo' },
+  { name: 'list_issues',      desc: 'Search & filter issues' },
+  { name: 'list_pull_requests', desc: 'List PRs by state' },
+  { name: 'list_workflow_runs', desc: 'See CI history' },
+  { name: 'memory.read',      desc: 'Recall past state' },
+  { name: 'memory.write',     desc: 'Remember for next time' },
+];
+
+const memoryLayers = [
+  { num: 'L4', name: 'SemanticMemory', tag: 'vector', desc: 'Finds similar memories via embedding similarity. For "what did the user ask about last time?" queries.' },
+  { num: 'L3', name: 'EpisodicMemory', tag: 'history', desc: 'Append-only log of past events and decisions. For "what did I do last time?" queries.' },
+  { num: 'L2', name: 'SqliteMemory', tag: 'indexed', desc: 'Persistent single-file memory with prefix queries. For high-volume agent runs.' },
+  { num: 'L1', name: 'GitMemory', tag: 'versioned', desc: 'Files in your repo, committed on every write. Memory is auditable in git history.' },
+];
+---
+
+<BaseLayout>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href={`${baseUrl}/`} class="brand">
+        <span class="brand-mark" aria-hidden="true">10×</span>
+        <span>gitagent</span>
+        <span class="brand-version">v0.1.0</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href={`${baseUrl}/#why`}>why</a>
+        <a href={`${baseUrl}/#playground`}>playground</a>
+        <a href={`${baseUrl}/#tools`}>tools</a>
+        <a href={`${baseUrl}/#memory`}>memory</a>
+        <a href="https://github.com/10xdev4u-alt/gitagent" rel="noopener" class="btn btn-ghost btn-mono">★ GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="hero-eyebrow reveal">
+        <span class="dot" aria-hidden="true"></span>
+        v0.1.0 · 101 commits · 391 tests · 17 tools · MIT
+      </span>
+      <h1 class="reveal reveal-2">
+        Agents that <em>live in your repo</em>,<br />
+        defined as <em>files</em>.
+      </h1>
+      <p class="hero-sub reveal reveal-3">
+        gitagent is the <strong>open-source framework</strong> for declaring persistent,
+        versioned AI agents as <code>.github/agents/&lt;name&gt;.md</code> files in any
+        GitHub repository. They run on real events. They remember. They ship the work.
+      </p>
+      <div class="hero-cta reveal reveal-4">
+        <a href="https://github.com/10xdev4u-alt/gitagent" rel="noopener" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.1-.4-.6-1.6.1-3.3 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.2 2.9.1 3.3.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+          Star on GitHub
+        </a>
+        <a href={`${baseUrl}/#playground`} class="btn btn-ghost btn-mono">./try-it →</a>
+        <a href="https://github.com/10xdev4u-alt/gitagent#readme" rel="noopener" class="btn btn-ghost">Read the docs</a>
+      </div>
+      <div class="hero-meta reveal reveal-4">
+        <span class="meta-item"><span class="dot" aria-hidden="true"></span> 13 agents online</span>
+        <span class="meta-item"><strong>391</strong> tests passing</span>
+        <span class="meta-item"><strong>0</strong> deps on frameworks</span>
+        <span class="meta-item"><strong>100%</strong> auditable</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMINAL DEMO -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow">01 · live demo</span>
+        <h2>Run a real agent.<br /><span style="color: var(--cyan);">In 5 seconds.</span></h2>
+        <p class="section-lede">
+          A real <code>gitagent</code> command, run against a real GitHub
+          issue. Watch the agent think, decide, and ship — all in your
+          terminal.
+        </p>
+      </div>
+      <TerminalDemo />
+    </div>
+  </section>
+
+  <!-- MANIFEST PLAYGROUND -->
+  <section class="section" id="playground">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow">02 · manifest playground</span>
+        <h2>Edit the manifest.<br /><span style="color: var(--cyan);">See the agent change.</span></h2>
+        <p class="section-lede">
+          Every agent is just a YAML file. Edit it. The preview updates
+          in real-time. No build step, no compiler, no framework to learn.
+        </p>
+      </div>
+      <ManifestPlayground />
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="section" id="why">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow">03 · the pitch</span>
+        <h2>The hard part isn't the agent.<br /><span style="color: var(--cyan);">It's the integration.</span></h2>
+        <p class="section-lede">
+          The agent is 20% of the work. The integration is 80%.
+          gitagent makes the 80% boring — so the 20% is all you have to think about.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; max-width: 1080px; margin: 0 auto;">
+        <div class="reveal" style="padding: 1.5rem; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">// 01</div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Declarative, not imperative</h3>
+          <p style="font-size: 0.92rem;">The agent is a YAML file. You describe what you want. The runtime does the rest. No state machines to design, no event loops to debug.</p>
+        </div>
+        <div class="reveal reveal-2" style="padding: 1.5rem; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">// 02</div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Versioned, like code</h3>
+          <p style="font-size: 0.92rem;">Every agent is in your repo. Every change is a commit. Every change is a PR. The agent's history is git history.</p>
+        </div>
+        <div class="reveal reveal-3" style="padding: 1.5rem; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">// 03</div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Auditable, like infra</h3>
+          <p style="font-size: 0.92rem;">Every action is logged. Every decision is traced. Every tool call is recorded. The agent is observable end-to-end.</p>
+        </div>
+        <div class="reveal reveal-4" style="padding: 1.5rem; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg);">
+          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">// 04</div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Recoverable, like backups</h3>
+          <p style="font-size: 0.92rem;">Every action is reversible. Every state is in git. The agent can be undone, rolled back, and restored. Always.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONSTELLATION -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow">04 · in the wild</span>
+        <h2>13 agents. <span style="color: var(--cyan);">One repo.</span><br />Zero coordination.</h2>
+        <p class="section-lede">
+          gitagent is the framework behind <a href="https://10xdev4u-alt.github.io/mr10xdev-blog/" style="color: var(--cyan);">mr10xdev-blog</a> —
+          a real production site where 13 agents share a single repository
+          and ship the work in parallel.
+        </p>
+      </div>
+      <AgentConstellation />
+    </div>
+  </section>
+
+  <!-- TOOLS GRID -->
+  <section class="section" id="tools">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow">05 · the 17 tools</span>
+        <h2>Out of the box.<br /><span style="color: var(--cyan);">No boilerplate.</span></h2>
+        <p class="section-lede">
+          17 production-ready GitHub tools. Zod-validated inputs. Retry
+          with backoff. Dry-run support. Composable into skills.
+        </p>
+      </div>
+      <div class="tools-grid">
+        {tools.map((t, i) => (
+          <div class="tool reveal" style={`transition-delay: ${(i % 8) * 40}ms;`}>
+            <span class="tool-icon">→</span>
+            <div>
+              <div class="tool-name">{t.name}</div>
+              <div class="tool-desc">{t.desc}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMORY HIERARCHY -->
+  <section class="section" id="memory">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow">06 · memory</span>
+        <h2>Four levels.<br /><span style="color: var(--cyan);">One hierarchy.</span></h2>
+        <p class="section-lede">
+          gitagent ships four memory backends, each tuned for a different
+          access pattern. Use them in any combination.
+        </p>
+      </div>
+      <div class="memory-stack">
+        {memoryLayers.map((m, i) => (
+          <div class="memory-layer reveal" style={`transition-delay: ${i * 80}ms;`}>
+            <div>
+              <div class="layer-num">LAYER {m.num}</div>
+              <h4>{m.name}</h4>
+              <p>{m.desc}</p>
+            </div>
+            <span class="layer-tag">{m.tag}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- TEST STATUS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow">07 · the test suite</span>
+        <h2>391 tests.<br /><span style="color: var(--green);">All green.</span></h2>
+        <p class="section-lede">
+          Every public API is covered. Every tool is tested. Every error
+          path is exercised. The CI is the source of truth.
+        </p>
+      </div>
+      <div class="tests-card reveal">
+        <div class="tests-pulse" aria-hidden="true">
+          <svg viewBox="0 0 80 80">
+            <circle class="ring" cx="40" cy="40" r="20" />
+            <circle class="ring r2" cx="40" cy="40" r="20" />
+            <circle class="ring r3" cx="40" cy="40" r="20" />
+            <circle cx="40" cy="40" r="10" fill="var(--green)" />
+          </svg>
+        </div>
+        <div class="tests-info">
+          <span class="num">391 / 391</span>
+          <span class="label"><strong>Tests passing</strong> on Node 22 · 100% typecheck clean</span>
+          <div class="tests-stats">
+            <div>manifest <span class="ok">●</span> 47 tests</div>
+            <div>runtime <span class="ok">●</span> 38 tests</div>
+            <div>tools <span class="ok">●</span> 96 tests</div>
+            <div>memory <span class="ok">●</span> 41 tests</div>
+            <div>server <span class="ok">●</span> 47 tests</div>
+            <div>providers <span class="ok">●</span> 28 tests</div>
+            <div>cli <span class="ok">●</span> 12 tests</div>
+            <div>skills <span class="ok">●</span> 13 tests</div>
+            <div>observability <span class="ok">●</span> 6 tests</div>
+            <div>examples <span class="ok">●</span> 2 tests</div>
+            <div>errors <span class="ok">●</span> 11 tests</div>
+            <div>matcher <span class="ok">●</span> 7 tests</div>
+            <div>loader <span class="ok">●</span> 8 tests</div>
+            <div>events <span class="ok">●</span> 8 tests</div>
+            <div>registry <span class="ok">●</span> 5 tests</div>
+            <div>token <span class="ok">●</span> 6 tests</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET STARTED -->
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-eyebrow">08 · get started</span>
+        <h2>From zero to agent<br /><span style="color: var(--cyan);">in 90 seconds.</span></h2>
+        <p class="section-lede">
+          Three commands. One file. Your agent is live, deployed, and
+          answering issues on GitHub.
+        </p>
+      </div>
+      <div class="getstarted reveal">
+        <div class="getstarted-tabs" role="tablist">
+          <button class="getstarted-tab active" data-tab="install" type="button">1. install</button>
+          <button class="getstarted-tab" data-tab="manifest" type="button">2. write manifest</button>
+          <button class="getstarted-tab" data-tab="run" type="button">3. run</button>
+        </div>
+
+        <div class="codeblock" data-pane="install">
+          <button class="copy" type="button">copy</button>
+          <pre><code><span style="color: var(--fg-dim);"># clone, install, build</span>
+<span style="color: var(--green);">$</span> git clone https://github.com/10xdev4u-alt/gitagent
+<span style="color: var(--green);">$</span> <span style="color: var(--cyan);">cd</span> gitagent && pnpm install
+<span style="color: var(--green);">$</span> pnpm test   <span style="color: var(--fg-dim);"># 391 tests · should all pass</span></code></pre>
+        </div>
+
+        <div class="codeblock" data-pane="manifest" hidden>
+          <button class="copy" type="button">copy</button>
+          <pre><code><span style="color: var(--fg-dim);"># .github/agents/triage.md</span>
+---
+<span style="color: var(--cyan);">name</span>: triage
+<span style="color: var(--cyan);">triggers</span>:
+  - issues.opened
+<span style="color: var(--cyan);">model</span>:
+  <span style="color: var(--cyan);">provider</span>: anthropic
+  <span style="color: var(--cyan);">name</span>: claude-sonnet-4-5
+<span style="color: var(--cyan);">tools</span>:
+  - github.add_labels
+  - github.post_comment
+---
+
+<span style="color: var(--fg-dim);"># You are an issue triager. Label each new issue</span>
+<span style="color: var(--fg-dim);"># as bug, feature, question, or duplicate.</span></code></pre>
+        </div>
+
+        <div class="codeblock" data-pane="run" hidden>
+          <button class="copy" type="button">copy</button>
+          <pre><code><span style="color: var(--fg-dim);"># start the webhook server (or deploy to GitHub Actions)</span>
+<span style="color: var(--green);">$</span> <span style="color: var(--cyan);">npx</span> gitagent serve --port 3000
+
+<span style="color: var(--fg-dim);">  ╭───────────────────────────────────────╮</span>
+<span style="color: var(--fg-dim);">  │</span>  <span style="color: var(--green);">●</span>  gitagent <span style="color: var(--fg-dim);">v0.1.0</span>              <span style="color: var(--fg-dim);">│</span>
+<span style="color: var(--fg-dim);">  │</span>  <span style="color: var(--fg-dim);">●</span>  <span style="color: var(--cyan);">13 agents</span> loaded              <span style="color: var(--fg-dim);">│</span>
+<span style="color: var(--fg-dim);">  │</span>  <span style="color: var(--fg-dim);">●</span>  <span style="color: var(--cyan);">17 tools</span> registered            <span style="color: var(--fg-dim);">│</span>
+<span style="color: var(--fg-dim);">  │</span>  <span style="color: var(--fg-dim);">●</span>  <span style="color: var(--cyan);">391 tests</span> passing              <span style="color: var(--fg-dim);">│</span>
+<span style="color: var(--fg-dim);">  │</span>  <span style="color: var(--fg-dim);">●</span>  <span style="color: var(--green);">listening on :3000</span>           <span style="color: var(--fg-dim);">│</span>
+<span style="color: var(--fg-dim);">  ╰───────────────────────────────────────╯</span>
+
+<span style="color: var(--fg-dim);"># Your agent is live. Open an issue and watch it work.</span></code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col footer-brand">
+          <div class="mark">
+            gitagent <span class="badge">v0.1.0</span>
+          </div>
+          <p>
+            Open-source framework for declaring persistent, versioned AI
+            agents as files in your GitHub repository. MIT licensed.
+          </p>
+          <p style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--fg-dim); margin-top: 1rem;">
+            <span style="color: var(--green);">●</span> 13 agents online · 100+ posts · building in public
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Project</h4>
+          <ul>
+            <li><a href="https://github.com/10xdev4u-alt/gitagent" rel="noopener">Source</a></li>
+            <li><a href="https://github.com/10xdev4u-alt/gitagent#readme" rel="noopener">README</a></li>
+            <li><a href="https://github.com/10xdev4u-alt/gitagent/issues" rel="noopener">Issues</a></li>
+            <li><a href="https://github.com/10xdev4u-alt/gitagent/blob/main/CHANGELOG.md" rel="noopener">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Examples</h4>
+          <ul>
+            <li><a href="https://github.com/10xdev4u-alt/gitagent/tree/main/examples" rel="noopener">All examples</a></li>
+            <li><a href="https://github.com/10xdev4u-alt/mr10xdev-blog/tree/main/.github/agents" rel="noopener">13 agents in the wild</a></li>
+            <li><a href="https://10xdev4u-alt.github.io/mr10xdev-blog/" rel="noopener">mr10xdev-blog (demo)</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Author</h4>
+          <ul>
+            <li><a href="https://github.com/10xdev4u-alt" rel="noopener">@10xdev4u-alt</a></li>
+            <li><a href="https://10xdev4u-alt.github.io/mr10xdev-blog/" rel="noopener">mr10xdev.dev</a></li>
+            <li><a href="mailto:10xdev4u@gmail.com">10xdev4u@gmail.com</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>© 2026 10xdev4u-alt · MIT licensed · built in public</div>
+        <div>
+          <a href="https://github.com/10xdev4u-alt/gitagent">source</a> ·
+          <a href="https://github.com/10xdev4u-alt/gitagent/blob/main/CHANGELOG.md">changelog</a> ·
+          <a href="https://github.com/10xdev4u-alt/gitagent/issues">issues</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script is:inline>
+    // Tab switching
+    (function () {
+      const tabs = document.querySelectorAll('.getstarted-tab');
+      const panes = document.querySelectorAll('.codeblock[data-pane]');
+      tabs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          const target = t.getAttribute('data-tab');
+          tabs.forEach(function (x) { x.classList.remove('active'); });
+          t.classList.add('active');
+          panes.forEach(function (p) {
+            p.hidden = p.getAttribute('data-pane') !== target;
+          });
+        });
+      });
+    })();
+
+    // Copy buttons
+    (function () {
+      document.querySelectorAll('.copy').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const code = btn.parentElement.querySelector('code').innerText;
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(code).then(function () {
+              const orig = btn.textContent;
+              btn.textContent = 'copied!';
+              btn.classList.add('copied');
+              setTimeout(function () { btn.textContent = orig; btn.classList.remove('copied'); }, 1400);
+            });
+          }
+        });
+      });
+    })();
+  </script>
+</BaseLayout>

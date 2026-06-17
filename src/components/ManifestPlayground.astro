@@ -1,0 +1,215 @@
+---
+// ManifestPlayground — interactive YAML editor with live preview
+const defaultManifest = `---
+name: issue-triage
+description: Auto-triage new GitHub issues
+triggers:
+  - issues.opened
+model:
+  provider: anthropic
+  name: claude-sonnet-4-5
+  temperature: 0.1
+memory:
+  type: git
+  path: .gitagent/memory
+  semantic: true
+tools:
+  - github.add_labels
+  - github.post_comment
+  - memory.read
+  - memory.write
+approval:
+  read: never
+  write: required
+limits:
+  maxSteps: 8
+  timeoutMs: 60000
+permissions:
+  closeIssues: false
+  mergePRs: false
+  release: false
+---
+
+# You are an issue triager for the {{repo.name}} repo.
+#
+# For each new issue:
+# 1. Read the title and body
+# 2. Decide: bug, feature, question, or duplicate
+# 3. Apply the label
+# 4. Post a friendly acknowledgement
+#
+# Use memory.read to check if you've seen this issue before.
+`;
+---
+
+<div class="playground reveal">
+  <div class="playground-pane">
+    <div class="playground-pane-head">
+      <span class="filename">.github/agents/issue-triage.md</span>
+      <span>yaml + markdown</span>
+    </div>
+    <textarea
+      class="playground-editor"
+      id="manifest-editor"
+      spellcheck="false"
+      autocomplete="off"
+    >{defaultManifest}</textarea>
+  </div>
+
+  <div class="playground-pane">
+    <div class="playground-pane-head">
+      <span>live preview</span>
+      <span style="color: var(--green);">● valid</span>
+    </div>
+    <div class="playground-preview" id="manifest-preview">
+      <div class="preview-banner ok">
+        <span>✓</span>
+        <span>manifest parsed · 4 tools · 1 trigger · git memory</span>
+      </div>
+      <div class="preview-row">
+        <div class="preview-key">name</div>
+        <div class="preview-val"><span class="tag">issue-triage</span></div>
+      </div>
+      <div class="preview-row">
+        <div class="preview-key">triggers</div>
+        <div class="preview-val"><span class="array">[issues.opened]</span></div>
+      </div>
+      <div class="preview-row">
+        <div class="preview-key">model</div>
+        <div class="preview-val">anthropic / <span class="tag">claude-sonnet-4-5</span> · temp 0.1</div>
+      </div>
+      <div class="preview-row">
+        <div class="preview-key">memory</div>
+        <div class="preview-val">git · path: <span class="tag">.gitagent/memory</span> · semantic: <span class="ok">true</span></div>
+      </div>
+      <div class="preview-row">
+        <div class="preview-key">tools</div>
+        <div class="preview-val"><span class="array">[github.add_labels, github.post_comment, memory.read, memory.write]</span></div>
+      </div>
+      <div class="preview-row">
+        <div class="preview-key">approval</div>
+        <div class="preview-val">read: <span class="ok">never</span> · write: <span class="err">required</span></div>
+      </div>
+      <div class="preview-row">
+        <div class="preview-key">limits</div>
+        <div class="preview-val">maxSteps: <span class="tag">8</span> · timeoutMs: <span class="tag">60000</span></div>
+      </div>
+      <div class="preview-row">
+        <div class="preview-key">permissions</div>
+        <div class="preview-val">closeIssues: <span class="ok">false</span> · mergePRs: <span class="ok">false</span> · release: <span class="ok">false</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    const editor = document.getElementById('manifest-editor');
+    const preview = document.getElementById('manifest-preview');
+    if (!editor || !preview) return;
+
+    // Simple YAML frontmatter extractor
+    function parseFrontmatter(raw) {
+      const m = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
+      if (!m) return null;
+      const yaml = m[1];
+      const body = m[2] || '';
+      const fm = {};
+      // Very small YAML subset parser: top-level keys + nested via 2-space indent
+      const lines = yaml.split('\n');
+      let i = 0;
+      while (i < lines.length) {
+        const line = lines[i];
+        const m2 = line.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
+        if (m2) {
+          const key = m2[1];
+          let val = m2[2].trim();
+          if (val === '') {
+            // Nested object — collect indented children
+            const children = {};
+            j = i + 1;
+            while (j < lines.length && /^\s{2,}\S/.test(lines[j])) {
+              const cm = lines[j].match(/^\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
+              if (cm) {
+                let cv = cm[2].trim();
+                // strip quotes
+                if ((cv.startsWith('"') && cv.endsWith('"')) || (cv.startsWith("'") && cv.endsWith("'"))) {
+                  cv = cv.slice(1, -1);
+                }
+                // parse booleans and numbers
+                if (cv === 'true') cv = true;
+                else if (cv === 'false') cv = false;
+                else if (!isNaN(Number(cv)) && cv !== '') cv = Number(cv);
+                children[cm[1]] = cv;
+              }
+              j++;
+            }
+            fm[key] = children;
+            i = j;
+            continue;
+          } else if (val.startsWith('[') && val.endsWith(']')) {
+            // inline list
+            const items = val.slice(1, -1).split(',').map(function (s) { return s.trim().replace(/^["']|["']$/g, ''); }).filter(Boolean);
+            fm[key] = items;
+          } else {
+            if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+              val = val.slice(1, -1);
+            }
+            if (val === 'true') val = true;
+            else if (val === 'false') val = false;
+            fm[key] = val;
+          }
+        }
+        i++;
+      }
+      return { fm: fm, body: body };
+    }
+
+    function render() {
+      const parsed = parseFrontmatter(editor.value);
+      if (!parsed) {
+        preview.innerHTML = '<div class="preview-banner err"><span>✕</span><span>Could not parse YAML frontmatter. Make sure it starts and ends with <code>---</code></span></div>';
+        return;
+      }
+      const f = parsed.fm;
+      const val = function (v) {
+        if (v === true) return '<span class="ok">true</span>';
+        if (v === false) return '<span class="ok">false</span>';
+        if (Array.isArray(v)) return '<span class="array">[' + v.map(function (x) { return typeof x === 'string' ? x : x; }).join(', ') + ']</span>';
+        if (typeof v === 'object' && v !== null) {
+          return Object.entries(v).map(function (k) { return k + ': <span class="tag">' + v[k] + '</span>'; }).join(' · ');
+        }
+        return '<span class="tag">' + v + '</span>';
+      };
+      const triggerList = Array.isArray(f.triggers) ? f.triggers : (f.triggers ? [f.triggers] : []);
+      const toolList = Array.isArray(f.tools) ? f.tools : (f.tools ? [f.tools] : []);
+      const approval = f.approval || {};
+      const limits = f.limits || {};
+      const permissions = f.permissions || {};
+      const model = f.model || {};
+
+      preview.innerHTML = '' +
+        '<div class="preview-banner ok"><span>✓</span><span>manifest parsed · ' +
+        toolList.length + ' tools · ' +
+        triggerList.length + ' trigger' + (triggerList.length !== 1 ? 's' : '') +
+        ' · ' + (f.memory && typeof f.memory === 'object' ? f.memory.type : (f.memory || 'none')) + ' memory</span></div>' +
+        '<div class="preview-row"><div class="preview-key">name</div><div class="preview-val">' + (f.name ? val(f.name) : '<span class="err">required</span>') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">description</div><div class="preview-val muted" style="font-size: 0.8rem;">' + (f.description || '—') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">triggers</div><div class="preview-val">' + val(triggerList) + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">model</div><div class="preview-val">' + (model.provider || '?') + ' / ' + (model.name ? val(model.name) : '<span class="err">required</span>') + (model.temperature !== undefined ? ' · temp <span class="tag">' + model.temperature + '</span>' : '') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">memory</div><div class="preview-val">' + (f.memory && typeof f.memory === 'object' ? val(f.memory) : (f.memory ? val(f.memory) : '<span class="muted">none</span>')) + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">tools</div><div class="preview-val">' + val(toolList) + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">approval</div><div class="preview-val">read: ' + val(approval.read ?? '—') + ' · write: ' + val(approval.write ?? '—') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">limits</div><div class="preview-val">' + (Object.keys(limits).length ? val(limits) : '<span class="muted">defaults</span>') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">permissions</div><div class="preview-val">' + (Object.keys(permissions).length ? val(permissions) : '<span class="muted">defaults</span>') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">body</div><div class="preview-val muted" style="font-family: var(--font-sans); font-size: 0.85rem; line-height: 1.5;">' + (parsed.body.trim().slice(0, 120) || '<em style="color: var(--fg-faint);">— empty —</em>') + (parsed.body.length > 120 ? '…' : '') + '</div></div>';
+    }
+
+    let timer;
+    editor.addEventListener('input', function () {
+      clearTimeout(timer);
+      timer = setTimeout(render, 120);
+    });
+    render();
+  })();
+</script>

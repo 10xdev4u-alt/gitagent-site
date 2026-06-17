@@ -1,0 +1,48 @@
+---
+// AgentConstellation — animated SVG showing the 13 agents connected to a central core
+const agents = [
+  { x: 50,  y: 50, label: 'gitagent', core: true },
+  { x: 15,  y: 18, label: 'triage' },
+  { x: 50,  y: 12, label: 'doc' },
+  { x: 85,  y: 18, label: 'release' },
+  { x: 92,  y: 50, label: 'welcome' },
+  { x: 85,  y: 82, label: 'standup' },
+  { x: 50,  y: 92, label: 'security' },
+  { x: 15,  y: 82, label: 'dependencies' },
+  { x: 8,   y: 50, label: 'meta' },
+  { x: 28,  y: 32, label: 'changelog' },
+  { x: 72,  y: 32, label: 'tests' },
+  { x: 72,  y: 68, label: 'oncall' },
+  { x: 28,  y: 68, label: 'refactor' },
+];
+---
+
+<div class="constellation reveal" aria-label="13 agents connected to the gitagent core">
+  <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+    <!-- Connection lines -->
+    {agents.slice(1).map((a) => (
+      <line
+        class="link"
+        x1="50" y1="50"
+        x2={a.x} y2={a.y}
+        vector-effect="non-scaling-stroke"
+      />
+    ))}
+    <!-- Agent nodes -->
+    {agents.map((a) => (
+      <g class={a.core ? 'core-group' : 'node-group'}>
+        {a.core ? (
+          <circle class="core" cx={a.x} cy={a.y} r="2.4" vector-effect="non-scaling-stroke" />
+        ) : (
+          <circle class="node" cx={a.x} cy={a.y} r="1.8" vector-effect="non-scaling-stroke" />
+        )}
+        <text
+          class="node-label"
+          x={a.x}
+          y={a.y + (a.y < 50 ? -3.5 : 4.5)}
+          text-anchor="middle"
+        >{a.label}</text>
+      </g>
+    ))}
+  </svg>
+</div>

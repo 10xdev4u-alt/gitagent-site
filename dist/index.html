@@ -1,0 +1,321 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="generator" content="Astro v4.16.19"><title>undefined — gitagent</title><meta name="description" content="gitagent — open-source framework for declaring persistent, versioned AI agents that live in your GitHub repo. Defined as files. Run on real events. Built for the open-source era."><link rel="canonical" href="https://10xdev4u-alt.github.io/gitagent"><!-- Open Graph --><meta property="og:type" content="website"><meta property="og:site_name" content="gitagent"><meta property="og:title" content="undefined — gitagent"><meta property="og:description" content="gitagent — open-source framework for declaring persistent, versioned AI agents that live in your GitHub repo. Defined as files. Run on real events. Built for the open-source era."><meta property="og:url" content="https://10xdev4u-alt.github.io/gitagent"><meta property="og:image" content="https://10xdev4u-alt.github.io/gitagent/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="undefined — gitagent"><meta name="twitter:description" content="gitagent — open-source framework for declaring persistent, versioned AI agents that live in your GitHub repo. Defined as files. Run on real events. Built for the open-source era."><meta name="twitter:image" content="https://10xdev4u-alt.github.io/gitagent/og.png"><meta name="theme-color" content="#06080c"><meta name="color-scheme" content="dark"><link rel="icon" type="image/svg+xml" href="/gitagent/favicon.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"><link rel="stylesheet" href="/gitagent/_astro/style.DmoMJXNV.css"></head> <body> <div class="cursor-light" id="cursor-light" aria-hidden="true"></div>  <header class="site-header"> <div class="container header-inner"> <a href="/gitagent/" class="brand"> <span class="brand-mark" aria-hidden="true">10×</span> <span>gitagent</span> <span class="brand-version">v0.1.0</span> </a> <nav class="nav" aria-label="Primary"> <a href="/gitagent/#why">why</a> <a href="/gitagent/#playground">playground</a> <a href="/gitagent/#tools">tools</a> <a href="/gitagent/#memory">memory</a> <a href="https://github.com/10xdev4u-alt/gitagent" rel="noopener" class="btn btn-ghost btn-mono">★ GitHub</a> </nav> </div> </header>  <section class="hero"> <div class="container hero-inner"> <span class="hero-eyebrow reveal"> <span class="dot" aria-hidden="true"></span>
+v0.1.0 · 101 commits · 391 tests · 17 tools · MIT
+</span> <h1 class="reveal reveal-2">
+Agents that <em>live in your repo</em>,<br>
+defined as <em>files</em>.
+</h1> <p class="hero-sub reveal reveal-3">
+gitagent is the <strong>open-source framework</strong> for declaring persistent,
+        versioned AI agents as <code>.github/agents/&lt;name&gt;.md</code> files in any
+        GitHub repository. They run on real events. They remember. They ship the work.
+</p> <div class="hero-cta reveal reveal-4"> <a href="https://github.com/10xdev4u-alt/gitagent" rel="noopener" class="btn btn-primary"> <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.1-.4-.6-1.6.1-3.3 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.2 2.9.1 3.3.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"></path></svg>
+Star on GitHub
+</a> <a href="/gitagent/#playground" class="btn btn-ghost btn-mono">./try-it →</a> <a href="https://github.com/10xdev4u-alt/gitagent#readme" rel="noopener" class="btn btn-ghost">Read the docs</a> </div> <div class="hero-meta reveal reveal-4"> <span class="meta-item"><span class="dot" aria-hidden="true"></span> 13 agents online</span> <span class="meta-item"><strong>391</strong> tests passing</span> <span class="meta-item"><strong>0</strong> deps on frameworks</span> <span class="meta-item"><strong>100%</strong> auditable</span> </div> </div> </section>  <section class="section"> <div class="container"> <div class="section-head reveal"> <span class="section-eyebrow">01 · live demo</span> <h2>Run a real agent.<br><span style="color: var(--cyan);">In 5 seconds.</span></h2> <p class="section-lede">
+A real <code>gitagent</code> command, run against a real GitHub
+          issue. Watch the agent think, decide, and ship — all in your
+          terminal.
+</p> </div> <div class="terminal-demo reveal" aria-label="Animated demo of gitagent running an issue triage agent"> <div class="terminal-bar"> <div class="dots"> <span class="dot r"></span> <span class="dot y"></span> <span class="dot g"></span> </div> <div class="title">~/projects/gitagent — zsh — 80×24</div> <div style="width: 52px;"></div> </div> <div class="terminal-body" id="term"> <span class="terminal-line" data-type="cmd" dangerouslySetInnerHTML="<span class=&#34;prompt&#34;>$</span> <span class=&#34;cmd&#34;>npx</span> <span class=&#34;arg&#34;>gitagent</span> <span class=&#34;arg&#34;>run</span> <span class=&#34;arg&#34;>triage</span> <span class=&#34;arg&#34;>--issue=42</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:01]</span> <span class=&#34;ok&#34;>●</span> loaded manifest <span class=&#34;cyan&#34;>triage.md</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:01]</span> <span class=&#34;ok&#34;>●</span> model <span class=&#34;cyan&#34;>claude-sonnet-4-5</span> · temperature <span class=&#34;cyan&#34;>0.1</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:02]</span> <span class=&#34;ok&#34;>●</span> context built: 1,247 tokens (system + memory + event)"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:02]</span> <span class=&#34;accent&#34;>→</span> llm.call <span class=&#34;dim&#34;>(step 1 of 5)</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:03]</span> <span class=&#34;ok&#34;>●</span> tool call: <span class=&#34;arg&#34;>github.add_labels</span> input=<span class=&#34;cyan&#34;>{&#34;issue_number&#34;:42,&#34;labels&#34;:[&#34;bug&#34;]}</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:04]</span> <span class=&#34;ok&#34;>✓</span> labels added: <span class=&#34;ok&#34;>bug</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:04]</span> <span class=&#34;accent&#34;>→</span> llm.call <span class=&#34;dim&#34;>(step 2 of 5)</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:05]</span> <span class=&#34;ok&#34;>●</span> tool call: <span class=&#34;arg&#34;>github.post_comment</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="      body=<span class=&#34;cyan&#34;>&#34;Thanks for the report — looking into this. cc @maintainer&#34;</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:05]</span> <span class=&#34;ok&#34;>✓</span> comment posted (id=<span class=&#34;cyan&#34;>291487</span>)"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:06]</span> <span class=&#34;accent&#34;>→</span> llm.call <span class=&#34;dim&#34;>(step 3 of 5)</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:07]</span> <span class=&#34;ok&#34;>●</span> tool call: <span class=&#34;arg&#34;>memory.write</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="      key=<span class=&#34;cyan&#34;>&#34;triage:42:labels&#34;</span> value=<span class=&#34;cyan&#34;>[&#34;bug&#34;]</span>"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:07]</span> <span class=&#34;ok&#34;>✓</span> memory persisted"></span><span class="terminal-line" data-type="out" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>[14:23:08]</span> <span class=&#34;ok&#34;>●</span> run complete · <span class=&#34;ok&#34;>3 tools · 4.2s · 847 tokens</span>"></span><span class="terminal-line" data-type="ok" dangerouslySetInnerHTML="<span class=&#34;ok&#34;>✓</span> <span class=&#34;ok&#34;>agent &#34;triage&#34; completed successfully</span>"></span><span class="terminal-line" data-type="dim" dangerouslySetInnerHTML="<span class=&#34;dim&#34;>run_id: r-9b2c1d4e · cost: $0.024 · saved to: .gitagent/runs/2026-06-17/</span>"></span><span class="terminal-line" data-type="cursor" dangerouslySetInnerHTML=""></span> </div> </div> <script>
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const term = document.getElementById('term');
+    if (!term) return;
+    const spans = term.querySelectorAll('.terminal-line');
+    spans.forEach(function (s) { s.style.display = 'none'; });
+
+    let idx = 0;
+    const speed = 220;
+    function show() {
+      if (idx >= spans.length) {
+        setTimeout(function () {
+          spans.forEach(function (s) { s.style.display = 'none'; });
+          idx = 0;
+          show();
+        }, 4000);
+        return;
+      }
+      const s = spans[idx];
+      s.style.display = 'block';
+      idx++;
+      const t = s.getAttribute('data-type');
+      const wait = t === 'cmd' ? 600 : t === 'cursor' ? 1200 : speed;
+      setTimeout(show, wait);
+    }
+    // Start once it's in view
+    const io = new IntersectionObserver(function (entries) {
+      if (entries.some(function (e) { return e.isIntersecting; })) {
+        io.disconnect();
+        show();
+      }
+    }, { threshold: 0.3 });
+    io.observe(term);
+  })();
+</script> </div> </section>  <section class="section" id="playground"> <div class="container"> <div class="section-head reveal"> <span class="section-eyebrow">02 · manifest playground</span> <h2>Edit the manifest.<br><span style="color: var(--cyan);">See the agent change.</span></h2> <p class="section-lede">
+Every agent is just a YAML file. Edit it. The preview updates
+          in real-time. No build step, no compiler, no framework to learn.
+</p> </div> <div class="playground reveal"> <div class="playground-pane"> <div class="playground-pane-head"> <span class="filename">.github/agents/issue-triage.md</span> <span>yaml + markdown</span> </div> <textarea class="playground-editor" id="manifest-editor" spellcheck="false" autocomplete="off">---
+name: issue-triage
+description: Auto-triage new GitHub issues
+triggers:
+  - issues.opened
+model:
+  provider: anthropic
+  name: claude-sonnet-4-5
+  temperature: 0.1
+memory:
+  type: git
+  path: .gitagent/memory
+  semantic: true
+tools:
+  - github.add_labels
+  - github.post_comment
+  - memory.read
+  - memory.write
+approval:
+  read: never
+  write: required
+limits:
+  maxSteps: 8
+  timeoutMs: 60000
+permissions:
+  closeIssues: false
+  mergePRs: false
+  release: false
+---
+
+# You are an issue triager for the {{repo.name}} repo.
+#
+# For each new issue:
+# 1. Read the title and body
+# 2. Decide: bug, feature, question, or duplicate
+# 3. Apply the label
+# 4. Post a friendly acknowledgement
+#
+# Use memory.read to check if you&#39;ve seen this issue before.
+</textarea> </div> <div class="playground-pane"> <div class="playground-pane-head"> <span>live preview</span> <span style="color: var(--green);">● valid</span> </div> <div class="playground-preview" id="manifest-preview"> <div class="preview-banner ok"> <span>✓</span> <span>manifest parsed · 4 tools · 1 trigger · git memory</span> </div> <div class="preview-row"> <div class="preview-key">name</div> <div class="preview-val"><span class="tag">issue-triage</span></div> </div> <div class="preview-row"> <div class="preview-key">triggers</div> <div class="preview-val"><span class="array">[issues.opened]</span></div> </div> <div class="preview-row"> <div class="preview-key">model</div> <div class="preview-val">anthropic / <span class="tag">claude-sonnet-4-5</span> · temp 0.1</div> </div> <div class="preview-row"> <div class="preview-key">memory</div> <div class="preview-val">git · path: <span class="tag">.gitagent/memory</span> · semantic: <span class="ok">true</span></div> </div> <div class="preview-row"> <div class="preview-key">tools</div> <div class="preview-val"><span class="array">[github.add_labels, github.post_comment, memory.read, memory.write]</span></div> </div> <div class="preview-row"> <div class="preview-key">approval</div> <div class="preview-val">read: <span class="ok">never</span> · write: <span class="err">required</span></div> </div> <div class="preview-row"> <div class="preview-key">limits</div> <div class="preview-val">maxSteps: <span class="tag">8</span> · timeoutMs: <span class="tag">60000</span></div> </div> <div class="preview-row"> <div class="preview-key">permissions</div> <div class="preview-val">closeIssues: <span class="ok">false</span> · mergePRs: <span class="ok">false</span> · release: <span class="ok">false</span></div> </div> </div> </div> </div> <script>
+  (function () {
+    const editor = document.getElementById('manifest-editor');
+    const preview = document.getElementById('manifest-preview');
+    if (!editor || !preview) return;
+
+    // Simple YAML frontmatter extractor
+    function parseFrontmatter(raw) {
+      const m = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n?([\s\S]*)$/);
+      if (!m) return null;
+      const yaml = m[1];
+      const body = m[2] || '';
+      const fm = {};
+      // Very small YAML subset parser: top-level keys + nested via 2-space indent
+      const lines = yaml.split('\n');
+      let i = 0;
+      while (i < lines.length) {
+        const line = lines[i];
+        const m2 = line.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
+        if (m2) {
+          const key = m2[1];
+          let val = m2[2].trim();
+          if (val === '') {
+            // Nested object — collect indented children
+            const children = {};
+            j = i + 1;
+            while (j < lines.length && /^\s{2,}\S/.test(lines[j])) {
+              const cm = lines[j].match(/^\s+([A-Za-z_][A-Za-z0-9_]*)\s*:\s*(.*)$/);
+              if (cm) {
+                let cv = cm[2].trim();
+                // strip quotes
+                if ((cv.startsWith('"') && cv.endsWith('"')) || (cv.startsWith("'") && cv.endsWith("'"))) {
+                  cv = cv.slice(1, -1);
+                }
+                // parse booleans and numbers
+                if (cv === 'true') cv = true;
+                else if (cv === 'false') cv = false;
+                else if (!isNaN(Number(cv)) && cv !== '') cv = Number(cv);
+                children[cm[1]] = cv;
+              }
+              j++;
+            }
+            fm[key] = children;
+            i = j;
+            continue;
+          } else if (val.startsWith('[') && val.endsWith(']')) {
+            // inline list
+            const items = val.slice(1, -1).split(',').map(function (s) { return s.trim().replace(/^["']|["']$/g, ''); }).filter(Boolean);
+            fm[key] = items;
+          } else {
+            if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+              val = val.slice(1, -1);
+            }
+            if (val === 'true') val = true;
+            else if (val === 'false') val = false;
+            fm[key] = val;
+          }
+        }
+        i++;
+      }
+      return { fm: fm, body: body };
+    }
+
+    function render() {
+      const parsed = parseFrontmatter(editor.value);
+      if (!parsed) {
+        preview.innerHTML = '<div class="preview-banner err"><span>✕</span><span>Could not parse YAML frontmatter. Make sure it starts and ends with <code>---</code></span></div>';
+        return;
+      }
+      const f = parsed.fm;
+      const val = function (v) {
+        if (v === true) return '<span class="ok">true</span>';
+        if (v === false) return '<span class="ok">false</span>';
+        if (Array.isArray(v)) return '<span class="array">[' + v.map(function (x) { return typeof x === 'string' ? x : x; }).join(', ') + ']</span>';
+        if (typeof v === 'object' && v !== null) {
+          return Object.entries(v).map(function (k) { return k + ': <span class="tag">' + v[k] + '</span>'; }).join(' · ');
+        }
+        return '<span class="tag">' + v + '</span>';
+      };
+      const triggerList = Array.isArray(f.triggers) ? f.triggers : (f.triggers ? [f.triggers] : []);
+      const toolList = Array.isArray(f.tools) ? f.tools : (f.tools ? [f.tools] : []);
+      const approval = f.approval || {};
+      const limits = f.limits || {};
+      const permissions = f.permissions || {};
+      const model = f.model || {};
+
+      preview.innerHTML = '' +
+        '<div class="preview-banner ok"><span>✓</span><span>manifest parsed · ' +
+        toolList.length + ' tools · ' +
+        triggerList.length + ' trigger' + (triggerList.length !== 1 ? 's' : '') +
+        ' · ' + (f.memory && typeof f.memory === 'object' ? f.memory.type : (f.memory || 'none')) + ' memory</span></div>' +
+        '<div class="preview-row"><div class="preview-key">name</div><div class="preview-val">' + (f.name ? val(f.name) : '<span class="err">required</span>') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">description</div><div class="preview-val muted" style="font-size: 0.8rem;">' + (f.description || '—') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">triggers</div><div class="preview-val">' + val(triggerList) + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">model</div><div class="preview-val">' + (model.provider || '?') + ' / ' + (model.name ? val(model.name) : '<span class="err">required</span>') + (model.temperature !== undefined ? ' · temp <span class="tag">' + model.temperature + '</span>' : '') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">memory</div><div class="preview-val">' + (f.memory && typeof f.memory === 'object' ? val(f.memory) : (f.memory ? val(f.memory) : '<span class="muted">none</span>')) + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">tools</div><div class="preview-val">' + val(toolList) + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">approval</div><div class="preview-val">read: ' + val(approval.read ?? '—') + ' · write: ' + val(approval.write ?? '—') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">limits</div><div class="preview-val">' + (Object.keys(limits).length ? val(limits) : '<span class="muted">defaults</span>') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">permissions</div><div class="preview-val">' + (Object.keys(permissions).length ? val(permissions) : '<span class="muted">defaults</span>') + '</div></div>' +
+        '<div class="preview-row"><div class="preview-key">body</div><div class="preview-val muted" style="font-family: var(--font-sans); font-size: 0.85rem; line-height: 1.5;">' + (parsed.body.trim().slice(0, 120) || '<em style="color: var(--fg-faint);">— empty —</em>') + (parsed.body.length > 120 ? '…' : '') + '</div></div>';
+    }
+
+    let timer;
+    editor.addEventListener('input', function () {
+      clearTimeout(timer);
+      timer = setTimeout(render, 120);
+    });
+    render();
+  })();
+</script> </div> </section>  <section class="section" id="why"> <div class="container"> <div class="section-head reveal"> <span class="section-eyebrow">03 · the pitch</span> <h2>The hard part isn't the agent.<br><span style="color: var(--cyan);">It's the integration.</span></h2> <p class="section-lede">
+The agent is 20% of the work. The integration is 80%.
+          gitagent makes the 80% boring — so the 20% is all you have to think about.
+</p> </div> <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; max-width: 1080px; margin: 0 auto;"> <div class="reveal" style="padding: 1.5rem; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg);"> <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">// 01</div> <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Declarative, not imperative</h3> <p style="font-size: 0.92rem;">The agent is a YAML file. You describe what you want. The runtime does the rest. No state machines to design, no event loops to debug.</p> </div> <div class="reveal reveal-2" style="padding: 1.5rem; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg);"> <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">// 02</div> <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Versioned, like code</h3> <p style="font-size: 0.92rem;">Every agent is in your repo. Every change is a commit. Every change is a PR. The agent's history is git history.</p> </div> <div class="reveal reveal-3" style="padding: 1.5rem; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg);"> <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">// 03</div> <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Auditable, like infra</h3> <p style="font-size: 0.92rem;">Every action is logged. Every decision is traced. Every tool call is recorded. The agent is observable end-to-end.</p> </div> <div class="reveal reveal-4" style="padding: 1.5rem; background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg);"> <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">// 04</div> <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">Recoverable, like backups</h3> <p style="font-size: 0.92rem;">Every action is reversible. Every state is in git. The agent can be undone, rolled back, and restored. Always.</p> </div> </div> </div> </section>  <section class="section"> <div class="container"> <div class="section-head reveal"> <span class="section-eyebrow">04 · in the wild</span> <h2>13 agents. <span style="color: var(--cyan);">One repo.</span><br>Zero coordination.</h2> <p class="section-lede">
+gitagent is the framework behind <a href="https://10xdev4u-alt.github.io/mr10xdev-blog/" style="color: var(--cyan);">mr10xdev-blog</a> —
+          a real production site where 13 agents share a single repository
+          and ship the work in parallel.
+</p> </div> <div class="constellation reveal" aria-label="13 agents connected to the gitagent core"> <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"> <!-- Connection lines --> <line class="link" x1="50" y1="50" x2="15" y2="18" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="50" y2="12" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="85" y2="18" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="92" y2="50" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="85" y2="82" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="50" y2="92" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="15" y2="82" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="8" y2="50" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="28" y2="32" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="72" y2="32" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="72" y2="68" vector-effect="non-scaling-stroke"></line><line class="link" x1="50" y1="50" x2="28" y2="68" vector-effect="non-scaling-stroke"></line> <!-- Agent nodes --> <g class="core-group"> <circle class="core" cx="50" cy="50" r="2.4" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="50" y="54.5" text-anchor="middle">gitagent</text> </g><g class="node-group"> <circle class="node" cx="15" cy="18" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="15" y="14.5" text-anchor="middle">triage</text> </g><g class="node-group"> <circle class="node" cx="50" cy="12" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="50" y="8.5" text-anchor="middle">doc</text> </g><g class="node-group"> <circle class="node" cx="85" cy="18" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="85" y="14.5" text-anchor="middle">release</text> </g><g class="node-group"> <circle class="node" cx="92" cy="50" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="92" y="54.5" text-anchor="middle">welcome</text> </g><g class="node-group"> <circle class="node" cx="85" cy="82" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="85" y="86.5" text-anchor="middle">standup</text> </g><g class="node-group"> <circle class="node" cx="50" cy="92" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="50" y="96.5" text-anchor="middle">security</text> </g><g class="node-group"> <circle class="node" cx="15" cy="82" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="15" y="86.5" text-anchor="middle">dependencies</text> </g><g class="node-group"> <circle class="node" cx="8" cy="50" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="8" y="54.5" text-anchor="middle">meta</text> </g><g class="node-group"> <circle class="node" cx="28" cy="32" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="28" y="28.5" text-anchor="middle">changelog</text> </g><g class="node-group"> <circle class="node" cx="72" cy="32" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="72" y="28.5" text-anchor="middle">tests</text> </g><g class="node-group"> <circle class="node" cx="72" cy="68" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="72" y="72.5" text-anchor="middle">oncall</text> </g><g class="node-group"> <circle class="node" cx="28" cy="68" r="1.8" vector-effect="non-scaling-stroke"></circle> <text class="node-label" x="28" y="72.5" text-anchor="middle">refactor</text> </g> </svg> </div> </div> </section>  <section class="section" id="tools"> <div class="container"> <div class="section-head reveal"> <span class="section-eyebrow">05 · the 17 tools</span> <h2>Out of the box.<br><span style="color: var(--cyan);">No boilerplate.</span></h2> <p class="section-lede">
+17 production-ready GitHub tools. Zod-validated inputs. Retry
+          with backoff. Dry-run support. Composable into skills.
+</p> </div> <div class="tools-grid"> <div class="tool reveal" style="transition-delay: 0ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">post_comment</div> <div class="tool-desc">Reply to issues/PRs</div> </div> </div><div class="tool reveal" style="transition-delay: 40ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">add_labels</div> <div class="tool-desc">Tag with one or more labels</div> </div> </div><div class="tool reveal" style="transition-delay: 80ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">remove_label</div> <div class="tool-desc">Remove a single label</div> </div> </div><div class="tool reveal" style="transition-delay: 120ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">create_issue</div> <div class="tool-desc">File a new issue</div> </div> </div><div class="tool reveal" style="transition-delay: 160ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">update_issue</div> <div class="tool-desc">Edit title/body/state</div> </div> </div><div class="tool reveal" style="transition-delay: 200ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">close_issue</div> <div class="tool-desc">Close with reason</div> </div> </div><div class="tool reveal" style="transition-delay: 240ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">reopen_issue</div> <div class="tool-desc">Reopen a closed one</div> </div> </div><div class="tool reveal" style="transition-delay: 280ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">create_pr</div> <div class="tool-desc">Open a new pull request</div> </div> </div><div class="tool reveal" style="transition-delay: 0ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">merge_pr</div> <div class="tool-desc">Merge with strategy</div> </div> </div><div class="tool reveal" style="transition-delay: 40ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">request_review</div> <div class="tool-desc">Ask humans for review</div> </div> </div><div class="tool reveal" style="transition-delay: 80ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">add_reaction</div> <div class="tool-desc">React to issues/comments</div> </div> </div><div class="tool reveal" style="transition-delay: 120ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">get_file</div> <div class="tool-desc">Read a file from the repo</div> </div> </div><div class="tool reveal" style="transition-delay: 160ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">list_issues</div> <div class="tool-desc">Search &amp; filter issues</div> </div> </div><div class="tool reveal" style="transition-delay: 200ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">list_pull_requests</div> <div class="tool-desc">List PRs by state</div> </div> </div><div class="tool reveal" style="transition-delay: 240ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">list_workflow_runs</div> <div class="tool-desc">See CI history</div> </div> </div><div class="tool reveal" style="transition-delay: 280ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">memory.read</div> <div class="tool-desc">Recall past state</div> </div> </div><div class="tool reveal" style="transition-delay: 0ms;"> <span class="tool-icon">→</span> <div> <div class="tool-name">memory.write</div> <div class="tool-desc">Remember for next time</div> </div> </div> </div> </div> </section>  <section class="section" id="memory"> <div class="container"> <div class="section-head reveal"> <span class="section-eyebrow">06 · memory</span> <h2>Four levels.<br><span style="color: var(--cyan);">One hierarchy.</span></h2> <p class="section-lede">
+gitagent ships four memory backends, each tuned for a different
+          access pattern. Use them in any combination.
+</p> </div> <div class="memory-stack"> <div class="memory-layer reveal" style="transition-delay: 0ms;"> <div> <div class="layer-num">LAYER L4</div> <h4>SemanticMemory</h4> <p>Finds similar memories via embedding similarity. For &quot;what did the user ask about last time?&quot; queries.</p> </div> <span class="layer-tag">vector</span> </div><div class="memory-layer reveal" style="transition-delay: 80ms;"> <div> <div class="layer-num">LAYER L3</div> <h4>EpisodicMemory</h4> <p>Append-only log of past events and decisions. For &quot;what did I do last time?&quot; queries.</p> </div> <span class="layer-tag">history</span> </div><div class="memory-layer reveal" style="transition-delay: 160ms;"> <div> <div class="layer-num">LAYER L2</div> <h4>SqliteMemory</h4> <p>Persistent single-file memory with prefix queries. For high-volume agent runs.</p> </div> <span class="layer-tag">indexed</span> </div><div class="memory-layer reveal" style="transition-delay: 240ms;"> <div> <div class="layer-num">LAYER L1</div> <h4>GitMemory</h4> <p>Files in your repo, committed on every write. Memory is auditable in git history.</p> </div> <span class="layer-tag">versioned</span> </div> </div> </div> </section>  <section class="section"> <div class="container"> <div class="section-head reveal"> <span class="section-eyebrow">07 · the test suite</span> <h2>391 tests.<br><span style="color: var(--green);">All green.</span></h2> <p class="section-lede">
+Every public API is covered. Every tool is tested. Every error
+          path is exercised. The CI is the source of truth.
+</p> </div> <div class="tests-card reveal"> <div class="tests-pulse" aria-hidden="true"> <svg viewBox="0 0 80 80"> <circle class="ring" cx="40" cy="40" r="20"></circle> <circle class="ring r2" cx="40" cy="40" r="20"></circle> <circle class="ring r3" cx="40" cy="40" r="20"></circle> <circle cx="40" cy="40" r="10" fill="var(--green)"></circle> </svg> </div> <div class="tests-info"> <span class="num">391 / 391</span> <span class="label"><strong>Tests passing</strong> on Node 22 · 100% typecheck clean</span> <div class="tests-stats"> <div>manifest <span class="ok">●</span> 47 tests</div> <div>runtime <span class="ok">●</span> 38 tests</div> <div>tools <span class="ok">●</span> 96 tests</div> <div>memory <span class="ok">●</span> 41 tests</div> <div>server <span class="ok">●</span> 47 tests</div> <div>providers <span class="ok">●</span> 28 tests</div> <div>cli <span class="ok">●</span> 12 tests</div> <div>skills <span class="ok">●</span> 13 tests</div> <div>observability <span class="ok">●</span> 6 tests</div> <div>examples <span class="ok">●</span> 2 tests</div> <div>errors <span class="ok">●</span> 11 tests</div> <div>matcher <span class="ok">●</span> 7 tests</div> <div>loader <span class="ok">●</span> 8 tests</div> <div>events <span class="ok">●</span> 8 tests</div> <div>registry <span class="ok">●</span> 5 tests</div> <div>token <span class="ok">●</span> 6 tests</div> </div> </div> </div> </div> </section>  <section class="section"> <div class="container"> <div class="section-head reveal"> <span class="section-eyebrow">08 · get started</span> <h2>From zero to agent<br><span style="color: var(--cyan);">in 90 seconds.</span></h2> <p class="section-lede">
+Three commands. One file. Your agent is live, deployed, and
+          answering issues on GitHub.
+</p> </div> <div class="getstarted reveal"> <div class="getstarted-tabs" role="tablist"> <button class="getstarted-tab active" data-tab="install" type="button">1. install</button> <button class="getstarted-tab" data-tab="manifest" type="button">2. write manifest</button> <button class="getstarted-tab" data-tab="run" type="button">3. run</button> </div> <div class="codeblock" data-pane="install"> <button class="copy" type="button">copy</button> <pre><code><span style="color: var(--fg-dim);"># clone, install, build</span>
+<span style="color: var(--green);">$</span> git clone https://github.com/10xdev4u-alt/gitagent
+<span style="color: var(--green);">$</span> <span style="color: var(--cyan);">cd</span> gitagent && pnpm install
+<span style="color: var(--green);">$</span> pnpm test   <span style="color: var(--fg-dim);"># 391 tests · should all pass</span></code></pre> </div> <div class="codeblock" data-pane="manifest" hidden> <button class="copy" type="button">copy</button> <pre><code><span style="color: var(--fg-dim);"># .github/agents/triage.md</span>
+---
+<span style="color: var(--cyan);">name</span>: triage
+<span style="color: var(--cyan);">triggers</span>:
+  - issues.opened
+<span style="color: var(--cyan);">model</span>:
+  <span style="color: var(--cyan);">provider</span>: anthropic
+  <span style="color: var(--cyan);">name</span>: claude-sonnet-4-5
+<span style="color: var(--cyan);">tools</span>:
+  - github.add_labels
+  - github.post_comment
+---
+
+<span style="color: var(--fg-dim);"># You are an issue triager. Label each new issue</span>
+<span style="color: var(--fg-dim);"># as bug, feature, question, or duplicate.</span></code></pre> </div> <div class="codeblock" data-pane="run" hidden> <button class="copy" type="button">copy</button> <pre><code><span style="color: var(--fg-dim);"># start the webhook server (or deploy to GitHub Actions)</span>
+<span style="color: var(--green);">$</span> <span style="color: var(--cyan);">npx</span> gitagent serve --port 3000
+
+<span style="color: var(--fg-dim);">  ╭───────────────────────────────────────╮</span>
+<span style="color: var(--fg-dim);">  │</span>  <span style="color: var(--green);">●</span>  gitagent <span style="color: var(--fg-dim);">v0.1.0</span>              <span style="color: var(--fg-dim);">│</span>
+<span style="color: var(--fg-dim);">  │</span>  <span style="color: var(--fg-dim);">●</span>  <span style="color: var(--cyan);">13 agents</span> loaded              <span style="color: var(--fg-dim);">│</span>
+<span style="color: var(--fg-dim);">  │</span>  <span style="color: var(--fg-dim);">●</span>  <span style="color: var(--cyan);">17 tools</span> registered            <span style="color: var(--fg-dim);">│</span>
+<span style="color: var(--fg-dim);">  │</span>  <span style="color: var(--fg-dim);">●</span>  <span style="color: var(--cyan);">391 tests</span> passing              <span style="color: var(--fg-dim);">│</span>
+<span style="color: var(--fg-dim);">  │</span>  <span style="color: var(--fg-dim);">●</span>  <span style="color: var(--green);">listening on :3000</span>           <span style="color: var(--fg-dim);">│</span>
+<span style="color: var(--fg-dim);">  ╰───────────────────────────────────────╯</span>
+
+<span style="color: var(--fg-dim);"># Your agent is live. Open an issue and watch it work.</span></code></pre> </div> </div> </div> </section>  <footer class="site-footer"> <div class="container"> <div class="footer-grid"> <div class="footer-col footer-brand"> <div class="mark">
+gitagent <span class="badge">v0.1.0</span> </div> <p>
+Open-source framework for declaring persistent, versioned AI
+            agents as files in your GitHub repository. MIT licensed.
+</p> <p style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--fg-dim); margin-top: 1rem;"> <span style="color: var(--green);">●</span> 13 agents online · 100+ posts · building in public
+</p> </div> <div class="footer-col"> <h4>Project</h4> <ul> <li><a href="https://github.com/10xdev4u-alt/gitagent" rel="noopener">Source</a></li> <li><a href="https://github.com/10xdev4u-alt/gitagent#readme" rel="noopener">README</a></li> <li><a href="https://github.com/10xdev4u-alt/gitagent/issues" rel="noopener">Issues</a></li> <li><a href="https://github.com/10xdev4u-alt/gitagent/blob/main/CHANGELOG.md" rel="noopener">Changelog</a></li> </ul> </div> <div class="footer-col"> <h4>Examples</h4> <ul> <li><a href="https://github.com/10xdev4u-alt/gitagent/tree/main/examples" rel="noopener">All examples</a></li> <li><a href="https://github.com/10xdev4u-alt/mr10xdev-blog/tree/main/.github/agents" rel="noopener">13 agents in the wild</a></li> <li><a href="https://10xdev4u-alt.github.io/mr10xdev-blog/" rel="noopener">mr10xdev-blog (demo)</a></li> </ul> </div> <div class="footer-col"> <h4>Author</h4> <ul> <li><a href="https://github.com/10xdev4u-alt" rel="noopener">@10xdev4u-alt</a></li> <li><a href="https://10xdev4u-alt.github.io/mr10xdev-blog/" rel="noopener">mr10xdev.dev</a></li> <li><a href="mailto:10xdev4u@gmail.com">10xdev4u@gmail.com</a></li> </ul> </div> </div> <div class="footer-bottom"> <div>© 2026 10xdev4u-alt · MIT licensed · built in public</div> <div> <a href="https://github.com/10xdev4u-alt/gitagent">source</a> ·
+<a href="https://github.com/10xdev4u-alt/gitagent/blob/main/CHANGELOG.md">changelog</a> ·
+<a href="https://github.com/10xdev4u-alt/gitagent/issues">issues</a> </div> </div> </div> </footer> <script>
+    // Tab switching
+    (function () {
+      const tabs = document.querySelectorAll('.getstarted-tab');
+      const panes = document.querySelectorAll('.codeblock[data-pane]');
+      tabs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          const target = t.getAttribute('data-tab');
+          tabs.forEach(function (x) { x.classList.remove('active'); });
+          t.classList.add('active');
+          panes.forEach(function (p) {
+            p.hidden = p.getAttribute('data-pane') !== target;
+          });
+        });
+      });
+    })();
+
+    // Copy buttons
+    (function () {
+      document.querySelectorAll('.copy').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const code = btn.parentElement.querySelector('code').innerText;
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(code).then(function () {
+              const orig = btn.textContent;
+              btn.textContent = 'copied!';
+              btn.classList.add('copied');
+              setTimeout(function () { btn.textContent = orig; btn.classList.remove('copied'); }, 1400);
+            });
+          }
+        });
+      });
+    })();
+  </script>  <script>
+      // Cursor light that follows the mouse (desktop only, respects motion prefs)
+      (function () {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (!window.matchMedia('(hover: hover)').matches) return;
+        const el = document.getElementById('cursor-light');
+        if (!el) return;
+        let tx = 0, ty = 0, x = 0, y = 0, raf;
+        function loop() {
+          x += (tx - x) * 0.18;
+          y += (ty - y) * 0.18;
+          el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+          raf = requestAnimationFrame(loop);
+        }
+        window.addEventListener('pointermove', function (e) {
+          tx = e.clientX; ty = e.clientY;
+          if (!raf) loop();
+        });
+        window.addEventListener('pointerleave', function () { el.style.opacity = '0'; });
+        window.addEventListener('pointerenter', function () { el.style.opacity = '0.5'; });
+      })();
+
+      // Reveal on scroll
+      (function () {
+        const io = new IntersectionObserver(function (entries) {
+          for (const e of entries) {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+          }
+        }, { threshold: 0.12, rootMargin: '0px 0px -10% 0px' });
+        document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+      })();
+    </script> </body> </html>
